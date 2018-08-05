@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         private const val CHOOSE_PHOTO_REQUEST = 10
 
         private const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        private const val CAMERA = Manifest.permission.CAMERA
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +88,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun getPhoto(theme: Int = R.style.LPhotoTheme) {
         //验证权限
-        if (EasyPermissions.hasPermissions(this, WRITE_EXTERNAL_STORAGE, CAMERA)) {
+        if (EasyPermissions.hasPermissions(this, WRITE_EXTERNAL_STORAGE)) {
 
             val intent = LPhotoPickerActivity.IntentBuilder(this)
                     .maxChooseCount(multiMumTv.text.toString().toInt())
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
             startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
         } else {
-            EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n\n2.拍照", PER_REQUEST, WRITE_EXTERNAL_STORAGE, CAMERA)
+            EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n\n2.拍照", PER_REQUEST, WRITE_EXTERNAL_STORAGE)
         }
     }
 

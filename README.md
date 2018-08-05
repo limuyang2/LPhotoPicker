@@ -18,12 +18,12 @@
 [暂无](https://)
 
 ## 获取 
-先在 build.gradle 的 repositories 添加：  
+先在 build.gradle 的 repositories 添加仓库：  
 ```gradle
 allprojects {
 	repositories {
-		...
-		maven { url 'https://jitpack.io' }
+        ...
+        maven { url 'https://jitpack.io' }
 	}
 }
 ```
@@ -41,11 +41,11 @@ dependencies {
 android {
     compileSdkVersion 27
     defaultConfig {
-    	………………
+        ………………
 
-		//添加以下两句代码
-		renderscriptTargetApi 27  //版本号请与compileSdkVersion保持一致
-		renderscriptSupportModeEnabled true
+        //添加以下两句代码
+        renderscriptTargetApi 27  //版本号请与compileSdkVersion保持一致
+        renderscriptSupportModeEnabled true
 
     }
 }

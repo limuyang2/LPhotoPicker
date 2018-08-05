@@ -18,7 +18,8 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
 
 ### demo下载地址
-[暂无](https://)
+[apk](https://www.lanzous.com/i1kx0ba)
+![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 
 先在 build.gradle 的 repositories 添加仓库：  
@@ -58,7 +59,8 @@ android {
 ## 使用
 > 使用前，记得获取权限！‘Manifest.permission.WRITE_EXTERNAL_STORAGE‘’，因为大家各自项目中使用的权限框架各不相同，库中再集成的话会显得非常臃肿多余。  
 
-> 以下均已kotlin为示例，java的写法基本无差别，不在单独列出
+> 以下均以kotlin为示例，java的写法基本无差别，不在单独列出  
+
 以下选项根据需要选择性添加：
 ```kotlin
 val intent = LPhotoPickerActivity.IntentBuilder(this)

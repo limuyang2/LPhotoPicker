@@ -18,7 +18,7 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
 
 ### demo下载地址
-[apk](https://www.lanzous.com/i1kx0ba)
+[apk下载](https://www.lanzous.com/i1kx0ba)  
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 

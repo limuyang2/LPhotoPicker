@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <top.limuyang2.photolibrary.widget.LPPViewPage xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </top.limuyang2.photolibrary.widget.LPPViewPage>
+
+
+    <FrameLayout
+        android:id="@+id/toolBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:id="@+id/topBlurView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:realtimeBlurRadius="20dp"
+            app:realtimeOverlayColor="#8c000000" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/l_pp_toolBar_height"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent" >
+
+            <TextView
+                android:id="@+id/previewTitleTv"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <top.limuyang2.photolibrary.widget.LPreviewSmoothCheckBox
+                app:l_pp_checkBox_color_checked="#fff"
+                android:id="@+id/checkBox"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:id="@+id/bottomBlurView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:realtimeBlurRadius="20dp"
+            app:realtimeOverlayColor="#8c000000" />
+
+        <Button
+            android:textColor="#fff"
+            android:id="@+id/applyBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="@string/l_pp_apply"
+            android:textSize="13sp" />
+
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LPPAttr">
+        <!--通用属性-->
+        <attr name="l_pp_toolBar_height" format="dimension" />
+        <attr name="l_pp_toolBar_backIcon" format="reference" />
+        <attr name="l_pp_toolBar_title_size" format="dimension"/>
+        <attr name="l_pp_bottomBar_height" format="dimension"/>
+
+        <attr name="l_pp_toolBar_background" format="reference|color" />
+        <attr name="l_pp_status_bar_color" format="color" />
+        <attr name="l_pp_picker_activity_bg" format="color" />
+
+        <attr name="l_pp_picker_bottomBar_background" format="color"/>
+        <attr name="l_pp_picker_bottomBar_enabled_text_color" format="color"/>
+        <attr name="l_pp_picker_bottomBar_unEnabled_text_color" format="color"/>
+
+        <!--图片分割线宽度-->
+        <attr name="l_pp_picker_segmenting_line_width" format="dimension"/>
+        <attr name="l_pp_toolBar_title_color" format="color"/><!--仅对图片选择页面生效-->
+
+        <!--圆形选择框样式-->
+        <attr name="l_pp_checkBox_color_tick" format="color"/><!--勾勾颜色-->
+        <attr name="l_pp_checkBox_duration" format="integer"/><!--动画时间-->
+        <attr name="l_pp_checkBox_color_checked" format="color"/><!--选择后的背景色-->
+        <attr name="l_pp_checkBox_stroke_width" format="dimension"/><!--（预览页面）边框宽度-->
+        <attr name="l_pp_checkBox_tick_width" format="dimension"/><!--勾勾的线条宽度-->
+
+
+
+
+
+    </declare-styleable>
+
+
+</resources>

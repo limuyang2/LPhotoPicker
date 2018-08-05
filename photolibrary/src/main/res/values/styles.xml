@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="LPPBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">@color/l_pp_colorPrimaryDark</item>
+        <!-- toolbar（actionbar）背景颜色 -->
+        <item name="colorPrimary">@color/l_pp_colorPrimary</item>
+        <!-- 底部导航栏的颜色 -->
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">
+            @color/l_pp_navigationBarColor
+        </item>
+
+
+
+
+    </style>
+
+    <style name="LPPDialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="LPhotoTheme" parent="LPPBaseTheme">
+
+        <!--通用属性（图片选择、图片预览共用）-->
+        <item name="l_pp_toolBar_height">56dp</item>
+        <item name="l_pp_toolBar_backIcon">@drawable/ic_l_pp_back_android</item>
+        <item name="l_pp_toolBar_title_size">16sp</item>
+        <item name="l_pp_bottomBar_height">50dp</item>
+
+        <!--图片选择页面属性-->
+        <item name="l_pp_status_bar_color">@color/l_pp_colorPrimaryDark</item>
+        <item name="l_pp_toolBar_background">@color/l_pp_colorPrimary</item>
+        <item name="l_pp_picker_activity_bg">#F9F9F9</item>
+        <item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
+        <item name="l_pp_picker_bottomBar_background">#96ffffff</item>
+        <item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item>
+        <item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底部按钮关闭时的颜色-->
+
+        <!--图片分割线宽度-->
+        <item name="l_pp_picker_segmenting_line_width">2dp</item>
+
+        <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
+        <item name="l_pp_checkBox_color_tick" format="color">#fff</item><!--勾勾颜色-->
+        <item name="l_pp_checkBox_duration" format="integer">100</item><!--动画时间-->
+        <item name="l_pp_checkBox_color_checked" format="color">#b547f9</item><!--选择后的背景色-->
+        <item name="l_pp_checkBox_stroke_width" format="dimension">2dp</item><!--（预览页面）边框宽度-->
+        <item name="l_pp_checkBox_tick_width" format="dimension">2dp</item><!--勾勾的线条宽度-->
+
+    </style>
+
+
+</resources>

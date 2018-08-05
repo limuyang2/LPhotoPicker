@@ -15,7 +15,7 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
 
 ### demo下载地址
-[demo apk](https://github.com/limuyang2/LDialog/blob/master/apk/app-release.apk)
+[暂无](https://)
 
 ## 获取 
 先在 build.gradle 的 repositories 添加：  
@@ -44,8 +44,8 @@ android {
     	………………
 
 		//添加以下两句代码
-        renderscriptTargetApi 27  //版本号请与compileSdkVersion保持一致
-        renderscriptSupportModeEnabled true
+		renderscriptTargetApi 27  //版本号请与compileSdkVersion保持一致
+		renderscriptSupportModeEnabled true
 
     }
 }

@@ -41,11 +41,11 @@ class LPreviewItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.photoView.setOnPhotoTapListener { _, _, _ ->
-            if (System.currentTimeMillis() - mLastShowHiddenTime > 500) {
+            if (System.currentTimeMillis() - mLastShowHiddenTime > 300) {
                 mLastShowHiddenTime = System.currentTimeMillis()
 
-                if (context is LPhotoPickerPreviewActivity) {
-                    val activity = context as LPhotoPickerPreviewActivity
+                if (mContext is LPhotoPickerPreviewActivity) {
+                    val activity = mContext as LPhotoPickerPreviewActivity
                     activity.changeToolBar()
                 }
             }

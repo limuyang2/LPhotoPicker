@@ -39,7 +39,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     override fun getThemeId(): Int = intent.getIntExtra(EXTRA_THEME, R.style.LPhotoTheme)
 
     override fun initView(savedInstanceState: Bundle?) {
-        window.setBackgroundDrawable(ColorDrawable(getColor(R.color.l_pp_photo_preview_bg)))
+        window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
         initAttr()
         setStatusBar()
         checkBox.setChecked(true, false)

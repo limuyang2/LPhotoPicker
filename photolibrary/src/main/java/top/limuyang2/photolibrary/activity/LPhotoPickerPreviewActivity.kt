@@ -23,6 +23,15 @@ import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.util.dp2px
 import top.limuyang2.photolibrary.util.getStatusBarHeight
 
+/**
+ * 预览界面
+ * @property nowSelectedPhotos ArrayList<String>
+ * @property intentMaxChooseCount Int
+ * @property intentSelectedPhotos (java.util.ArrayList<(kotlin.String..kotlin.String?)>..java.util.ArrayList<(kotlin.String..kotlin.String?)>?)
+ * @property viewPageAdapter LPreviewPagerAdapter
+ * @property currentPath String
+ * @property mIsHidden Boolean
+ */
 @SuppressLint("SetTextI18n")
 class LPhotoPickerPreviewActivity : LBaseActivity() {
 
@@ -47,7 +56,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         viewPage.adapter = viewPageAdapter
     }
 
-    var currentPath = ""
+    private var currentPath = ""
 
     override fun initListener() {
         toolBar.setNavigationOnClickListener { onBackPressed() }
@@ -126,7 +135,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = Color.TRANSPARENT
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
 
         //获取状态栏高度,设置顶部layout高度

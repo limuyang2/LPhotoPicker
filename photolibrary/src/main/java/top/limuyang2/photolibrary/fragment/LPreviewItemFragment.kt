@@ -1,16 +1,15 @@
 package top.limuyang2.photolibrary.fragment
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.android.synthetic.main.l_pp_fragment_preview_item.view.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
-import top.limuyang2.photolibrary.util.ImageEngineUtils
 
 
 /**
@@ -40,36 +39,18 @@ class LPreviewItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.photoView.setOnPhotoTapListener { _, _, _ ->
-            if (System.currentTimeMillis() - mLastShowHiddenTime > 300) {
-                mLastShowHiddenTime = System.currentTimeMillis()
+        view.photoView.setOnClickListener {
+                if (System.currentTimeMillis() - mLastShowHiddenTime > 500) {
+                    mLastShowHiddenTime = System.currentTimeMillis()
 
-                if (mContext is LPhotoPickerPreviewActivity) {
-                    val activity = mContext as LPhotoPickerPreviewActivity
-                    activity.changeToolBar()
-                }
+                    if (mContext is LPhotoPickerPreviewActivity) {
+                        val activity = mContext as LPhotoPickerPreviewActivity
+                        activity.changeToolBar()
+                    }
             }
         }
 
-        load()
-    }
-
-    private fun load() {
-        view?.let {
-
-            val options = BitmapFactory.Options()
-            /**
-             * 最关键在此，把options.inJustDecodeBounds = true;
-             * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了
-             */
-            options.inJustDecodeBounds = true
-            BitmapFactory.decodeFile(path, options) // 此时返回的bitmap为null
-            /**
-             *options.outHeight为原始图片的高
-             */
-            ImageEngineUtils.engine.load(mContext, it.photoView, path, R.drawable.ic_l_pp_ic_holder_light, options.outWidth, options.outHeight)
-
-        }
+        view.photoView.setImage(ImageSource.uri(path ?: ""))
     }
 
     companion object {

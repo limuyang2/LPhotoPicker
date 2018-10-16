@@ -7,14 +7,12 @@
     <!-- colorPrimary的颜色 -->
     <color name="l_pp_colorPrimary">#169ce4</color>
 
-
     <!-- 文件夹名称颜色 -->
     <color name="l_pp_folder_name_textColor">#333333</color>
     <!-- 文件夹中照片数量颜色 -->
     <color name="l_pp_folder_count_textColor">#585858</color>
     <!-- 图片条目背景色 -->
     <color name="l_pp_popWindow_bg">#f9f9f9</color>
-
 
     <color name="l_pp_photo_preview_bg">#000</color>
 

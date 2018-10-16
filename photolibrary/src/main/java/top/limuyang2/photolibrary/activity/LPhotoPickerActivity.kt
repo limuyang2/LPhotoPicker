@@ -27,7 +27,6 @@ import top.limuyang2.photolibrary.popwindow.LPhotoFolderPopWin
 import top.limuyang2.photolibrary.util.*
 
 
-
 /**
  *
  * Date 2018/7/31
@@ -38,7 +37,7 @@ import top.limuyang2.photolibrary.util.*
 class LPhotoPickerActivity : LBaseActivity() {
 
     companion object {
-//        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
+        //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
         private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
         private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
         private const val EXTRA_PAUSE_ON_SCROLL = "EXTRA_PAUSE_ON_SCROLL"
@@ -50,16 +49,9 @@ class LPhotoPickerActivity : LBaseActivity() {
         private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
 
         /**
-         * 拍照的请求码
-         */
-        private val REQUEST_CODE_TAKE_PHOTO = 1
-        /**
          * 预览照片的请求码
          */
         private val RC_PREVIEW_CODE = 2
-
-        private val SPAN_COUNT = 3
-
 
         /**
          * 获取已选择的图片集合
@@ -76,13 +68,13 @@ class LPhotoPickerActivity : LBaseActivity() {
     class IntentBuilder(context: Context) {
         private val mIntent: Intent = Intent(context, LPhotoPickerActivity::class.java)
 
-//        /**
-//         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
-//         */
-//        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
-//            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
-//            return this
-//        }
+        //        /**
+        //         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
+        //         */
+        //        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
+        //            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
+        //            return this
+        //        }
 
         /**
          * 需要显示哪种类型的图片(JPG\PNG\GIF\WEBP)，默认全部加载
@@ -159,8 +151,8 @@ class LPhotoPickerActivity : LBaseActivity() {
         }
     }
 
-//    // 获取拍照图片保存目录
-//    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
+    //    // 获取拍照图片保存目录
+    //    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
 
     // 获取图片选择的最大张数
     private val maxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
@@ -253,7 +245,7 @@ class LPhotoPickerActivity : LBaseActivity() {
 
         val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, Color.parseColor("#333333"))
         val bottomBarUnEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_unEnabled_text_color, Color.GRAY)
-        val colors = intArrayOf(bottomBarEnableTextColor,  bottomBarUnEnableTextColor)
+        val colors = intArrayOf(bottomBarEnableTextColor, bottomBarUnEnableTextColor)
         val states = arrayOfNulls<IntArray>(2)
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)
@@ -320,8 +312,10 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     override fun initData() {
         async(UI) {
-            val photoModelList = bg { findPhoto(this@LPhotoPickerActivity, showTypeArray) }.await()
-            this@LPhotoPickerActivity.photoModelList.addAll(photoModelList)
+            bg {
+                val list = findPhoto(this@LPhotoPickerActivity, showTypeArray)
+                this@LPhotoPickerActivity.photoModelList.addAll(list)
+            }.await()
 
             reloadPhotos(0)
         }
@@ -390,7 +384,7 @@ class LPhotoPickerActivity : LBaseActivity() {
                         }
                     }
 
-                    Activity.RESULT_OK       -> {
+                    Activity.RESULT_OK -> {
                         data?.let {
                             returnSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
                         }

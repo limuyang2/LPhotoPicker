@@ -37,7 +37,7 @@ allprojects {
 ```gradle
 dependencies {
 	
-	implementation 'com.github.limuyang2:LPhotoPicker:1.0.2'
+	implementation 'com.github.limuyang2:LPhotoPicker:1.0.3'
 }
 ```
 
@@ -167,10 +167,9 @@ LPhotoPickerActivity.IntentBuilder(this)
 ```
 
 ## 混淆
-本库所有内容，除Glide外，均可以混淆，已经过测试。  
-添加如下Glide混淆规则即可：(如果自定义了其他图片加载库，请自行添加混淆内容即可)
+  添加support.v8规则和Glide混淆规则（如果自定义了其他图片加载库，请自行添加混淆内容即可）
 ```
-#glide 4.x
+# glide 4.x
 -keep class com.bumptech.glide.Glide { *; }
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
@@ -178,6 +177,9 @@ LPhotoPickerActivity.IntentBuilder(this)
   **[] $VALUES;
   public *;
 }
+
+# renderscript
+-keep class android.support.v8.renderscript.** { *; }
 ```
 
 ## 附录：配合使用uCrop

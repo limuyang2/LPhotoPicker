@@ -15,9 +15,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
 import kotlinx.android.synthetic.main.l_activity_photo_picker.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
+import kotlinx.coroutines.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
@@ -311,12 +309,11 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     override fun initData() {
-        async(UI) {
-            bg {
+        GlobalScope.launch(Dispatchers.Main) {
+            async(Dispatchers.IO) {
                 val list = findPhoto(this@LPhotoPickerActivity, showTypeArray)
                 this@LPhotoPickerActivity.photoModelList.addAll(list)
             }.await()
-
             reloadPhotos(0)
         }
     }

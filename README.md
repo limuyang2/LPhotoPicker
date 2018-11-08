@@ -1,5 +1,9 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
+
+> 如果你的项目中使用了kotlin协程，请升级到kotlin 1.3，并使用正式包中的协程版本。切勿使用实验版！切勿使用实验版！切勿使用实验版！  
+> 如果你需要继续使用kotlin 1.2 并使用 实验版协程，请使用```1.0.3```版本
+
 # LPhotoPicker
 这是一个漂亮的、纯粹的图片选择框架，对```对kotlin```的良好支持，java也可使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
 如果你喜欢毛玻璃效果、如果你想拥有最大化的自定义，那么这个库你不容错过。  
@@ -37,7 +41,7 @@ allprojects {
 ```gradle
 dependencies {
 	
-	implementation 'com.github.limuyang2:LPhotoPicker:1.0.3'
+	implementation 'com.github.limuyang2:LPhotoPicker:1.0.5'
 }
 ```
 

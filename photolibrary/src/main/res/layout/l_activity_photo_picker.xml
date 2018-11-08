@@ -12,6 +12,7 @@
 
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/l_pp_toolBar_height"
             android:background="@android:color/transparent">
@@ -19,7 +20,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolBar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/l_pp_toolBar_height">
+                android:layout_height="match_parent">
 
 
                 <LinearLayout

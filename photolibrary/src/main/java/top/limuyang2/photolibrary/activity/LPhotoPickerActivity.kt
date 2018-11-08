@@ -217,9 +217,9 @@ class LPhotoPickerActivity : LBaseActivity() {
         setStatusBarColor(this, statusBarColor)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
-        val l = toolBar.layoutParams
+        val l = appBarLayout.layoutParams
         l.height = toolBarHeight
-        toolBar.layoutParams = l
+        appBarLayout.layoutParams = l
 
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
         toolBar.setNavigationIcon(backIcon)

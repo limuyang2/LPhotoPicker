@@ -40,7 +40,7 @@ allprojects {
 ```gradle
 dependencies {
 	
-	implementation 'com.github.limuyang2:LPhotoPicker:1.0.3'
+	implementation 'com.github.limuyang2:LPhotoPicker:1.0.5'
 }
 ```
 

@@ -319,7 +319,7 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     private fun reloadPhotos(pos: Int) {
-        if (photoModelList.size >= pos) {
+        if (photoModelList.size > 0 && photoModelList.size >= pos) {
             photoPickerTitle.text = photoModelList[pos].name
             adapter.setData(photoModelList[pos].photoInfoList)
         }

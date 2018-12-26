@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.l_pp_item_photo_picker.view.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
@@ -21,22 +20,21 @@ import top.limuyang2.photolibrary.widget.LPPSmoothCheckBox
  * @author limuyang
  */
 
-typealias OnPhotoItemClick = (view: View, path: String, pos: Int) -> Unit
+private typealias OnPhotoItemClick = (view: View, path: String, pos: Int) -> Unit
 
-typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
+//private typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
 
-typealias OnPhotoItemLongClick = (view: View, path: String, pos: Int) -> Unit
+//private typealias OnPhotoItemLongClick = (view: View, path: String, pos: Int) -> Unit
 
 
 class PhotoPickerRecyclerAdapter(private val context: Context,
-                                 private val maxSelectNum: Int,
-                                 private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
+                                 private val maxSelectNum: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
 
     var onPhotoItemClick: OnPhotoItemClick? = null
 
-    var onPhotoItemLongClick: OnPhotoItemLongClick? = null
+//    var onPhotoItemLongClick: OnPhotoItemLongClick? = null
 
-    var onPhotoItemChildClick: OnPhotoItemChildClick? = null
+//    var onPhotoItemChildClick: OnPhotoItemChildClick? = null
 
     private val list: ArrayList<LPhotoModel.PhotoInfo> = arrayListOf()
 
@@ -44,11 +42,6 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.l_pp_item_photo_picker, parent, false)
-
-        val imgParams = view.imgView.layoutParams
-        imgParams.width = imgWidth
-        imgParams.height = imgWidth
-        view.imgView.layoutParams = imgParams
 
         val holder = ViewHolder(view)
         onPhotoItemClick?.let {
@@ -68,7 +61,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
         holder.checkBox.setChecked(selectedSet.contains(list[position].photoPath), false)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgView: ImageView = itemView.findViewById(R.id.imgView)
         val checkBox: LPPSmoothCheckBox = itemView.findViewById(R.id.checkView)
     }

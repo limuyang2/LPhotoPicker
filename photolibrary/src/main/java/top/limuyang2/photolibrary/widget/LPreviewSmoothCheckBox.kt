@@ -25,9 +25,9 @@ class LPreviewSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: 
     private val mCenterPoint: Point = Point()
     private val mTickPath: Path = Path()
 
-    private var mLeftLineDistance: Float = 0.toFloat()
-    private var mRightLineDistance: Float = 0.toFloat()
-    private var mDrewDistance: Float = 0.toFloat()
+    private var mLeftLineDistance: Float = 0f
+    private var mRightLineDistance: Float = 0f
+    private var mDrewDistance: Float = 0f
     private var mScaleVal = 1.0f
     private var mFloorScale = 1.0f
     private var mWidth: Int = 0
@@ -55,7 +55,7 @@ class LPreviewSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: 
 //        mFloorColor = ta.getColor(R.styleable.LPPSmoothCheckBox_color_unchecked_stroke, Color.TRANSPARENT)
         mCheckedColor = ta.getColor(R.styleable.LPPAttr_l_pp_checkBox_color_checked, COLOR_CHECKED)
 //        mUnCheckedColor = ta.getColor(R.styleable.LPPSmoothCheckBox_color_unchecked, Color.TRANSPARENT)
-        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_stroke_width, dp2px(context, 0f))
+        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_stroke_width, mStrokeWidth)
         mTickWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_tick_width, 0)
         ta.recycle()
 
@@ -325,7 +325,7 @@ class LPreviewSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: 
             return Color.argb(currentA, currentR, currentG, currentB)
         }
 
-        fun dp2px(context: Context, dipValue: Float): Int {
+        private fun dp2px(context: Context, dipValue: Float): Int {
             val scale = context.resources.displayMetrics.density
             return (dipValue * scale + 0.5f).toInt()
         }

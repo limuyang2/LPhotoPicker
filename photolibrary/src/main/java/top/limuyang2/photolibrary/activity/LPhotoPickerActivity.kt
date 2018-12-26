@@ -15,7 +15,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
 import kotlinx.android.synthetic.main.l_activity_photo_picker.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
@@ -44,12 +47,10 @@ class LPhotoPickerActivity : LBaseActivity() {
         private const val EXTRA_TYPE = "EXTRA_TYPE"
         private const val EXTRA_THEME = "EXTRA_THEME"
 
-        private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
-
         /**
          * 预览照片的请求码
          */
-        private val RC_PREVIEW_CODE = 2
+        private const val RC_PREVIEW_CODE = 2
 
         /**
          * 获取已选择的图片集合
@@ -65,14 +66,6 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     class IntentBuilder(context: Context) {
         private val mIntent: Intent = Intent(context, LPhotoPickerActivity::class.java)
-
-        //        /**
-        //         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
-        //         */
-        //        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
-        //            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
-        //            return this
-        //        }
 
         /**
          * 需要显示哪种类型的图片(JPG\PNG\GIF\WEBP)，默认全部加载
@@ -170,11 +163,9 @@ class LPhotoPickerActivity : LBaseActivity() {
     private var segmentingLineWidth: Int = 0
 
     private val adapter by lazy {
-        val width = getScreenWidth(this)
-        val imgWidth = (width - segmentingLineWidth * (columnsNumber + 1)) / columnsNumber
-        val a = PhotoPickerRecyclerAdapter(this, maxChooseCount, imgWidth)
-        a.setSelectedItemsPath(selectedPhotos)
-        a
+        PhotoPickerRecyclerAdapter(this, maxChooseCount).apply {
+            setSelectedItemsPath(selectedPhotos)
+        }
     }
 
     private val folderPopWindow by lazy {
@@ -264,6 +255,7 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     private fun initRecyclerView() {
         pickerRecycler.apply {
+            setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
@@ -281,20 +273,17 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     override fun initListener() {
         toolBar.setNavigationOnClickListener { finish() }
-        titleLayout.setOnClickListener(object : OnNoDoubleClickListener() {
-            override fun onNoDoubleClick(v: View) {
-                showPhotoFolderPopWindow()
-            }
-        })
-        previewBtn.setOnClickListener {
+        titleLayout.singleClick {
+            showPhotoFolderPopWindow()
+        }
+
+        previewBtn.singleClick {
             gotoPreview()
         }
 
-        applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
-            override fun onNoDoubleClick(v: View) {
-                returnSelectedPhotos(adapter.getSelectedItems())
-            }
-        })
+        applyBtn.singleClick {
+            returnSelectedPhotos(adapter.getSelectedItems())
+        }
 
         adapter.onPhotoItemClick = { view, path, _ ->
             if (isSingleChoose) {
@@ -309,11 +298,11 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     override fun initData() {
-        GlobalScope.launch(Dispatchers.Main) {
-            async(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
                 val list = findPhoto(this@LPhotoPickerActivity, showTypeArray)
                 this@LPhotoPickerActivity.photoModelList.addAll(list)
-            }.await()
+            }
             reloadPhotos(0)
         }
     }

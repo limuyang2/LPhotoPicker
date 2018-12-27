@@ -22,7 +22,7 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
 
 ### demo下载地址
-[apk下载](https://www.lanzous.com/i2pn4la)  
+[apk下载](https://www.lanzous.com/i2pnira)  
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 
@@ -171,7 +171,7 @@ LPhotoPickerActivity.IntentBuilder(this)
 ```
 
 ## 混淆
-  添加support.v8规则和Glide混淆规则（如果自定义了其他图片加载库，请自行添加混淆内容即可）
+  添加kotlin协程、support.v8和Glide混淆规则（如果自定义了其他图片加载库，请自行添加混淆内容即可）
 ```
 # glide 4.x
 -keep class com.bumptech.glide.Glide { *; }
@@ -184,6 +184,16 @@ LPhotoPickerActivity.IntentBuilder(this)
 
 # renderscript
 -keep class android.support.v8.renderscript.** { *; }
+
+# kotlin协程
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
 ```
 
 ## 附录：配合使用uCrop

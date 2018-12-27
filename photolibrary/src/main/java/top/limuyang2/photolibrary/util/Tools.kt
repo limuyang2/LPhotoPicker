@@ -86,7 +86,7 @@ fun Context.getScreenHeight(): Int {
     return point.y
 }
 
-fun isNotImageFile(path: String): Boolean {
+private fun isNotImageFile(path: String): Boolean {
     if (TextUtils.isEmpty(path)) {
         return true
     }

@@ -22,29 +22,24 @@ import java.io.File
 /**
  * Value of dp to value of px.
  *
- * @param dpValue The value of dp.
+ * @param value The value of dp.
  * @return value of px
  */
-fun dp2px(context: Context, dpValue: Float): Float {
-    val scale = context.resources.displayMetrics.density
-    return (dpValue * scale + 0.5f)
-}
+fun Context.dp2px(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
 /**
  * Return the status bar's height.
  *
  * @return the status bar's height
  */
-fun getStatusBarHeight(context: Context): Int {
-    val resources = context.resources
+fun Context.getStatusBarHeight(): Int {
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return resources.getDimensionPixelSize(resourceId)
 }
 
-fun setStatusBarColor(activity: Activity, @ColorInt color: Int) {
+fun Activity.setStatusBarColor(@ColorInt color: Int) {
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = color
 
@@ -61,9 +56,9 @@ fun setStatusBarColor(activity: Activity, @ColorInt color: Int) {
  *
  * @return the width of screen, in pixel
  */
-fun getScreenWidth(context: Context): Int {
-    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-             ?: return context.resources.displayMetrics.widthPixels
+fun Context.getScreenWidth(): Int {
+    val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+            ?: return resources.displayMetrics.widthPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)
@@ -79,9 +74,9 @@ fun getScreenWidth(context: Context): Int {
  *
  * @return the height of screen, in pixel
  */
-fun getScreenHeight(context: Context): Int {
-    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-             ?: return context.resources.displayMetrics.heightPixels
+fun Context.getScreenHeight(): Int {
+    val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+            ?: return resources.displayMetrics.heightPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)

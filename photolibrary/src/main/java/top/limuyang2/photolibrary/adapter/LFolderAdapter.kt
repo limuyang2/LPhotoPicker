@@ -47,7 +47,6 @@ class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolde
         } else ""
 
         ImageEngineUtils.engine.load(context, holder.imgView, path, R.drawable.ic_l_pp_ic_holder_light, holder.imgView.layoutParams.width, holder.imgView.layoutParams.width)
-
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

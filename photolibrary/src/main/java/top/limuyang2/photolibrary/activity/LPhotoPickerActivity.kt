@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
+import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter.Companion.CHECK_BOX_ID
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.popwindow.LPhotoFolderPopWin
@@ -163,7 +164,10 @@ class LPhotoPickerActivity : LBaseActivity() {
     private var segmentingLineWidth: Int = 0
 
     private val adapter by lazy {
-        PhotoPickerRecyclerAdapter(this, maxChooseCount).apply {
+        val width = getScreenWidth()
+        val imgWidth = (width - segmentingLineWidth * (columnsNumber + 1)) / columnsNumber
+
+        PhotoPickerRecyclerAdapter(this, imgWidth, maxChooseCount).apply {
             setSelectedItemsPath(selectedPhotos)
         }
     }
@@ -205,9 +209,9 @@ class LPhotoPickerActivity : LBaseActivity() {
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
-        setStatusBarColor(this, statusBarColor)
+        setStatusBarColor(statusBarColor)
 
-        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
+        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(56))
         val l = appBarLayout.layoutParams
         l.height = toolBarHeight
         appBarLayout.layoutParams = l
@@ -227,7 +231,7 @@ class LPhotoPickerActivity : LBaseActivity() {
         val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#96ffffff"))
         topBlurView.setOverlayColor(bottomBarBgColor)
 
-        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
+        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(50))
         val newBl = bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         bottomLayout.layoutParams = newBl
@@ -243,12 +247,12 @@ class LPhotoPickerActivity : LBaseActivity() {
         applyBtn.setTextColor(colorList)
 
         val titleColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
-        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
+        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(16).toFloat())
         photoPickerTitle.setTextColor(titleColor)
         photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
         photoPickerArrow.setColorFilter(titleColor)
 
-        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(this, 5f).toInt())
+        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(5))
 
         typedArray.recycle()
     }
@@ -256,7 +260,9 @@ class LPhotoPickerActivity : LBaseActivity() {
     private fun initRecyclerView() {
         pickerRecycler.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
+            layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber).apply {
+                initialPrefetchItemCount = columnsNumber * 2
+            }
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
                 addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber))
@@ -290,7 +296,7 @@ class LPhotoPickerActivity : LBaseActivity() {
                 val list = ArrayList<String>().apply { add(path) }
                 returnSelectedPhotos(list)
             } else {
-                adapter.setChooseItem(path, view.findViewById(R.id.checkView))
+                adapter.setChooseItem(path, view.findViewById(CHECK_BOX_ID))
                 setBottomBtn()
             }
         }

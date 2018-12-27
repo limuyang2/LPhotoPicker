@@ -101,7 +101,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
+        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(56))
         val l = toolBar.layoutParams
         l.height = toolBarHeight
         toolBar.layoutParams = l
@@ -109,10 +109,10 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
         toolBar.setNavigationIcon(backIcon)
 
-        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
+        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(16).toFloat())
         previewTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
 
-        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
+        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(50))
         val newBl = bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         bottomLayout.layoutParams = newBl
@@ -140,8 +140,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
 
         //获取状态栏高度,设置顶部layout高度
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val statusHeight = getStatusBarHeight(this)
-            val allHeight = statusHeight + toolBar.layoutParams.height
+            val allHeight = getStatusBarHeight() + toolBar.layoutParams.height
             val newLayout = topBlurView.layoutParams
             newLayout.height = allHeight
             topBlurView.layoutParams = newLayout

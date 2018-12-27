@@ -14,6 +14,7 @@ class LGlideEngine : LImageEngine {
     private val glideOptions by lazy { RequestOptions().centerCrop() }
 
     override fun load(context: Context, imageView: ImageView, path: String?, @DrawableRes placeholderRes: Int, resizeX: Int, resizeY: Int) {
+        Glide.with(context).clear(imageView)
         Glide.with(context)
                 .load(path)
                 .apply(glideOptions.placeholder(placeholderRes).override(resizeX, resizeY))

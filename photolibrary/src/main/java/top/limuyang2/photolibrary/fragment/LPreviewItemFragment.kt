@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.davemorrissey.labs.subscaleview.ImageSource
-import kotlinx.android.synthetic.main.l_pp_fragment_preview_item.view.*
+import kotlinx.android.synthetic.main.l_pp_fragment_preview_item.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
 
@@ -39,7 +39,7 @@ class LPreviewItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.photoView.setOnClickListener {
+        photoView.setOnClickListener {
                 if (System.currentTimeMillis() - mLastShowHiddenTime > 500) {
                     mLastShowHiddenTime = System.currentTimeMillis()
 
@@ -49,8 +49,8 @@ class LPreviewItemFragment : Fragment() {
                     }
             }
         }
-
-        view.photoView.setImage(ImageSource.uri(path ?: ""))
+        photoView.maxScale = 5f
+        photoView.setImage(ImageSource.uri(path ?: ""))
     }
 
     companion object {

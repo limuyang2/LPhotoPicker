@@ -49,9 +49,11 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
 
-        ImageEngineUtils.engine.load(context, holder.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.imgView.layoutParams.width, holder.imgView.layoutParams.width)
+        val photoPatch = list[position].photoPath
+        val size = holder.imgView.layoutParams.width
+        ImageEngineUtils.engine.load(context, holder.imgView, photoPatch, R.drawable.ic_l_pp_ic_holder_light, size, size)
 
-        holder.checkBox.setChecked(selectedSet.contains(list[position].photoPath), false)
+        holder.checkBox.setChecked(selectedSet.contains(photoPatch), false)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

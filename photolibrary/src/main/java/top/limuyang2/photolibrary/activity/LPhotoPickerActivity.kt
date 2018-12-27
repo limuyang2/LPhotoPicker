@@ -260,9 +260,7 @@ class LPhotoPickerActivity : LBaseActivity() {
     private fun initRecyclerView() {
         pickerRecycler.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber).apply {
-                initialPrefetchItemCount = columnsNumber * 2
-            }
+            layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
                 addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber))

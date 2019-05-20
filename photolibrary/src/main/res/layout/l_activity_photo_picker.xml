@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/root"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -56,18 +57,19 @@
     </LinearLayout>
 
 
-    <FrameLayout
+    <eightbitlab.com.blurview.BlurView
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom">
 
-        <com.github.mmin18.widget.RealtimeBlurView
-            android:id="@+id/topBlurView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            app:realtimeBlurRadius="20dp" />
+        <!--<eightbitlab.com.blurview.BlurView-->
+            <!--android:id="@+id/topBlurView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:visibility="visible"-->
+            <!--/>-->
+
 
         <Button
             android:id="@+id/previewBtn"
@@ -87,6 +89,6 @@
             android:text="@string/l_pp_apply"
             android:textSize="13sp" />
 
-    </FrameLayout>
+    </eightbitlab.com.blurview.BlurView>
 
 </FrameLayout>

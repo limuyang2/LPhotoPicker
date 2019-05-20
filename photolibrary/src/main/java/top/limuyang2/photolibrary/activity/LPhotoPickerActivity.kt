@@ -14,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
+import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.l_activity_photo_picker.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -229,7 +230,19 @@ class LPhotoPickerActivity : LBaseActivity() {
         }
 
         val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#96ffffff"))
-        topBlurView.setOverlayColor(bottomBarBgColor)
+        bottomLayout.setOverlayColor(bottomBarBgColor)
+        val decorView = window.decorView
+        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
+//        val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
+        //Set drawable to draw in the beginning of each blurred frame (Optional).
+        //Can be used in case your layout has a lot of transparent space and your content
+        //gets kinda lost after after blur is applied.
+        val windowBackground = decorView.background
+        bottomLayout.setupWith(root)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(RenderScriptBlur(this))
+                .setBlurRadius(25f)
+                .setHasFixedTransformationMatrix(false)
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(50))
         val newBl = bottomLayout.layoutParams

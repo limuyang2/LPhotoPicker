@@ -33,7 +33,7 @@ private fun View.delayOver(): Boolean {
     return false
 }
 
-fun View.singleClick(time: Long = 600, block: (View) -> Unit) {
+internal fun View.singleClick(time: Long = 600, block: (View) -> Unit) {
     triggerDelay = time
 
     setOnClickListener {

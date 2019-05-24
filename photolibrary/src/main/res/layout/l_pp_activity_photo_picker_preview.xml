@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <top.limuyang2.photolibrary.widget.LPPViewPage xmlns:android="http://schemas.android.com/apk/res/android"
+    <top.limuyang2.photolibrary.widget.LPPViewPage
         android:id="@+id/viewPage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </top.limuyang2.photolibrary.widget.LPPViewPage>
+        android:layout_height="match_parent"/>
 
 
     <FrameLayout
@@ -54,7 +52,7 @@
 
 
     <FrameLayout
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -80,4 +78,4 @@
     </FrameLayout>
 
 
-</RelativeLayout>
+</FrameLayout>

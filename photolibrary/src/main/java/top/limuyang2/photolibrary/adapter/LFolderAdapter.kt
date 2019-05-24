@@ -18,7 +18,7 @@ import java.util.*
  * @author limuyang
  * popWindow适配器
  */
-class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
+internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
 
     private var onPhotoItemClick: OnFolderItemClick? = null
 
@@ -66,4 +66,4 @@ class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolde
     }
 }
 
-typealias OnFolderItemClick = (view: View, pos: Int) -> Unit
+internal typealias OnFolderItemClick = (view: View, pos: Int) -> Unit

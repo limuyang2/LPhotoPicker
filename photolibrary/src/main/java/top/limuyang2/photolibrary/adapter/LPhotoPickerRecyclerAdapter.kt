@@ -136,7 +136,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
  * @author limuyang
  * 分割线 px
  */
-class LPPGridDivider(private val space: Int, private val columnsNumber: Int, private val bottomLayoutHeight: Int = 0) : RecyclerView.ItemDecoration() {
+internal class LPPGridDivider(private val space: Int, private val columnsNumber: Int, private val bottomLayoutHeight: Int = 0) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView, state: RecyclerView.State?) {
         outRect?.let {

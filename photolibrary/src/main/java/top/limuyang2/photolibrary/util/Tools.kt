@@ -25,19 +25,19 @@ import java.io.File
  * @param value The value of dp.
  * @return value of px
  */
-fun Context.dp2px(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+internal fun Context.dp2px(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
 /**
  * Return the status bar's height.
  *
  * @return the status bar's height
  */
-fun Context.getStatusBarHeight(): Int {
+internal fun Context.getStatusBarHeight(): Int {
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return resources.getDimensionPixelSize(resourceId)
 }
 
-fun Activity.setStatusBarColor(@ColorInt color: Int) {
+internal fun Activity.setStatusBarColor(@ColorInt color: Int) {
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -56,7 +56,7 @@ fun Activity.setStatusBarColor(@ColorInt color: Int) {
  *
  * @return the width of screen, in pixel
  */
-fun Context.getScreenWidth(): Int {
+internal fun Context.getScreenWidth(): Int {
     val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
             ?: return resources.displayMetrics.widthPixels
     val point = Point()
@@ -74,7 +74,7 @@ fun Context.getScreenWidth(): Int {
  *
  * @return the height of screen, in pixel
  */
-fun Context.getScreenHeight(): Int {
+internal fun Context.getScreenHeight(): Int {
     val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
             ?: return resources.displayMetrics.heightPixels
     val point = Point()
@@ -93,16 +93,10 @@ private fun isNotImageFile(path: String): Boolean {
 
     val file = File(path)
     return !file.exists() || file.length() == 0L
-
-    // 获取图片的宽和高，但不把图片加载到内存中
-    //        BitmapFactory.Options options = new BitmapFactory.Options();
-    //        options.inJustDecodeBounds = true;
-    //        BitmapFactory.decodeFile(path, options);
-    //        return options.outMimeType == null;
 }
 
 
-fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
+internal fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
     val photoModelList = ArrayList<LPhotoModel>()
 
     val typeArray = showType ?: arrayOf("image/jpeg", "image/png", "image/jpg", "image/gif")

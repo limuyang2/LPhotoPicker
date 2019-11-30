@@ -50,6 +50,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
 
+        val blurColor = Color.parseColor("#8c000000")
         val decorView = window.decorView
         val windowBackground = decorView.background
         toolBarLayout.setupWith(viewPage)
@@ -57,11 +58,13 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
                 .setBlurAlgorithm(RenderScriptBlur(this))
                 .setBlurRadius(25f)
                 .setHasFixedTransformationMatrix(false)
+                .setOverlayColor(blurColor)
         bottomLayout.setupWith(viewPage)
                 .setFrameClearDrawable(windowBackground)
                 .setBlurAlgorithm(RenderScriptBlur(this))
                 .setBlurRadius(25f)
                 .setHasFixedTransformationMatrix(false)
+                .setOverlayColor(blurColor)
 
         initAttr()
         setStatusBar()

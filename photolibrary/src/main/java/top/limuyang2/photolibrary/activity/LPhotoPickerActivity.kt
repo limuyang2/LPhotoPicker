@@ -238,7 +238,7 @@ class LPhotoPickerActivity : LBaseActivity() {
         //Can be used in case your layout has a lot of transparent space and your content
         //gets kinda lost after after blur is applied.
         val windowBackground = decorView.background
-        bottomLayout.setupWith(root)
+        bottomLayout.setupWith(pickerRecycler)
                 .setFrameClearDrawable(windowBackground)
                 .setBlurAlgorithm(RenderScriptBlur(this))
                 .setBlurRadius(25f)

@@ -6,12 +6,12 @@
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingBottom="150dp">
+    android:paddingBottom="160dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/folderRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/l_pp_shape_photo_folder_pw_bg"
         android:overScrollMode="never"
         android:paddingBottom="4dp"

@@ -1,5 +1,6 @@
 package top.limuyang2.photolibrary.activity
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -10,13 +11,12 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StyleRes
-import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
+import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.l_pp_activity_photo_picker_preview.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
@@ -49,6 +49,20 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
+
+        val decorView = window.decorView
+        val windowBackground = decorView.background
+        toolBarLayout.setupWith(viewPage)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(RenderScriptBlur(this))
+                .setBlurRadius(25f)
+                .setHasFixedTransformationMatrix(false)
+        bottomLayout.setupWith(viewPage)
+                .setFrameClearDrawable(windowBackground)
+                .setBlurAlgorithm(RenderScriptBlur(this))
+                .setBlurRadius(25f)
+                .setHasFixedTransformationMatrix(false)
+
         initAttr()
         setStatusBar()
         checkBox.setChecked(true, false)
@@ -141,9 +155,9 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         //获取状态栏高度,设置顶部layout高度
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val allHeight = getStatusBarHeight() + toolBar.layoutParams.height
-            val newLayout = topBlurView.layoutParams
+            val newLayout = toolBarLayout.layoutParams
             newLayout.height = allHeight
-            topBlurView.layoutParams = newLayout
+            toolBarLayout.layoutParams = newLayout
         }
     }
 
@@ -166,36 +180,45 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     }
 
     private fun showTitleBarAndChooseBar() {
-        ViewCompat.animate(toolBarLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
-            override fun onAnimationEnd(view: View?) {
-                mIsHidden = false
-            }
-        }).setDuration(DURATION_TIME).start()
-        toolBarLayout.visibility = View.VISIBLE
+        val ani = ValueAnimator.ofFloat(-toolBarLayout.height.toFloat(), 0f)
+        ani.setDuration(DURATION_TIME)
+                .addUpdateListener {
+                    toolBarLayout.translationY = it.animatedValue as Float
+                }
+        ani.interpolator = DecelerateInterpolator(2f)
 
-        ViewCompat.animate(bottomLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
-            override fun onAnimationEnd(view: View?) {
-                mIsHidden = false
-            }
-        }).setDuration(DURATION_TIME).start()
-        bottomLayout.visibility = View.VISIBLE
+        val ani2 = ValueAnimator.ofFloat(bottomLayout.height.toFloat(), 0f)
+        ani2.setDuration(DURATION_TIME)
+                .addUpdateListener {
+                    bottomLayout.translationY = it.animatedValue as Float
+                }
+        ani2.interpolator = DecelerateInterpolator(2f)
+
+        ani.start()
+        ani2.start()
+        mIsHidden = false
     }
 
     private fun hiddenToolBarAndChooseBar() {
-        ViewCompat.animate(toolBarLayout).translationY((-toolBarLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
-            override fun onAnimationEnd(view: View?) {
-                mIsHidden = true
-                toolBarLayout.visibility = View.GONE
-            }
-        }).setDuration(DURATION_TIME).start()
 
-        ViewCompat.animate(bottomLayout).translationY((bottomLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
-            override fun onAnimationEnd(view: View?) {
-                mIsHidden = true
-                bottomLayout.visibility = View.GONE
-            }
-        }).setDuration(DURATION_TIME).start()
+        val ani = ValueAnimator.ofFloat(0f, -toolBarLayout.height.toFloat())
+        ani.setDuration(DURATION_TIME)
+                .addUpdateListener {
+                    toolBarLayout.translationY = it.animatedValue as Float
+                }
+        ani.interpolator = DecelerateInterpolator(2f)
+        ani.start()
 
+        val ani2 = ValueAnimator.ofFloat(0f, bottomLayout.height.toFloat())
+        ani2.setDuration(DURATION_TIME)
+                .addUpdateListener {
+                    bottomLayout.translationY = it.animatedValue as Float
+                }
+        ani2.interpolator = DecelerateInterpolator(2f)
+
+        ani.start()
+        ani2.start()
+        mIsHidden = true
     }
 
     class IntentBuilder(context: Context) {
@@ -239,7 +262,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     }
 
     companion object {
-        private const val DURATION_TIME = 600L
+        private const val DURATION_TIME = 500L
 
         //        private const val EXTRA_PREVIEW_PHOTOS = "EXTRA_PREVIEW_PHOTOS"
         private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"

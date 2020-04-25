@@ -1,9 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
-
-> 如果你的项目中使用了kotlin协程，请升级到kotlin 1.3，并使用正式包中的协程版本。切勿使用实验版！切勿使用实验版！切勿使用实验版！  
-> 如果你需要继续使用kotlin 1.2 并使用 实验版协程，请使用```1.0.3```版本
-
 # LPhotoPicker
 这是一个漂亮的、纯粹的图片选择框架，对```对kotlin```的良好支持，java也可使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
 如果你喜欢毛玻璃效果、如果你想拥有最大化的自定义，那么这个库你不容错过。  
@@ -22,7 +18,7 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
 
 ### demo下载地址
-[apk下载](https://www.lanzous.com/i7rgrvi)  
+[apk下载](https://www.lanzous.com/i1kx0ba)  
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 
@@ -41,7 +37,7 @@ allprojects {
 ```gradle
 dependencies {
 	
-	implementation 'com.github.limuyang2:LPhotoPicker:1.0.9'
+	implementation 'com.github.limuyang2:LPhotoPicker:1.0.2'
 }
 ```
 
@@ -171,28 +167,16 @@ LPhotoPickerActivity.IntentBuilder(this)
 ```
 
 ## 混淆
-  添加kotlin协程、support.v8和Glide混淆规则（如果自定义了其他图片加载库，请自行添加混淆内容即可）
+本库所有内容，除Glide外，均可以混淆，已经过测试。  
+添加如下Glide混淆规则即可：(如果自定义了其他图片加载库，请自行添加混淆内容即可)
 ```
-# glide 4.x
+#glide 4.x
 -keep class com.bumptech.glide.Glide { *; }
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
-}
-
-# renderscript
--keep class android.support.v8.renderscript.** { *; }
-
-# kotlin协程
-# ServiceLoader support
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
-
-# Most of volatile fields are updated with AFU and should not be mangled
--keepclassmembernames class kotlinx.** {
-    volatile <fields>;
 }
 ```
 

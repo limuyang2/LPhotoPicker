@@ -26,6 +26,10 @@
         <attr name="l_pp_checkBox_stroke_width" format="dimension"/><!--（预览页面）边框宽度-->
         <attr name="l_pp_checkBox_tick_width" format="dimension"/><!--勾勾的线条宽度-->
 
+
+
+
+
     </declare-styleable>
 
 

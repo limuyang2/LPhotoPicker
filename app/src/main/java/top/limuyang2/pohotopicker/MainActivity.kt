@@ -4,11 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -121,10 +120,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         if (use_uCrop_cb.isChecked) {
                             //使用UCrop裁剪图片
                             val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
-                            UCrop.of(Uri.fromFile(File(selectedPhotos[0])), outUri)
-                                    .withAspectRatio(1f, 1f)
-                                    .withMaxResultSize(800, 800)
-                                    .start(this)
+//                            UCrop.of(Uri.fromFile(File(selectedPhotos[0])), outUri)
+//                                    .withAspectRatio(1f, 1f)
+//                                    .withMaxResultSize(800, 800)
+//                                    .start(this)
                         } else {
                             Glide.with(this).load(selectedPhotos[0]).into(imgView)
                         }
@@ -138,13 +137,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
 
-                UCrop.REQUEST_CROP   -> {
-                    data?.let {
-                        val resultUri = UCrop.getOutput(data)
-                        Log.d("UCrop.REQUEST_CROP", resultUri.toString())
-                        Glide.with(this).load(resultUri).into(imgView)
-                    }
-                }
+//                UCrop.REQUEST_CROP   -> {
+//                    data?.let {
+//                        val resultUri = UCrop.getOutput(data)
+//                        Log.d("UCrop.REQUEST_CROP", resultUri.toString())
+//                        Glide.with(this).load(resultUri).into(imgView)
+//                    }
+//                }
             }
         }
     }

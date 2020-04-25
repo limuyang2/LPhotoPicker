@@ -11,8 +11,6 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Checkable
 import top.limuyang2.photolibrary.R
-import top.limuyang2.photolibrary.util.dp2px
-
 /**
  *
  */
@@ -25,16 +23,16 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
     private val mCenterPoint: Point = Point()
     private val mTickPath: Path = Path()
 
-    private var mLeftLineDistance: Float = 0f
-    private var mRightLineDistance: Float = 0f
-    private var mDrewDistance: Float = 0f
+    private var mLeftLineDistance: Float = 0.toFloat()
+    private var mRightLineDistance: Float = 0.toFloat()
+    private var mDrewDistance: Float = 0.toFloat()
     private var mScaleVal = 1.0f
     private var mFloorScale = 1.0f
     private var mWidth: Int = 0
-    private var mAnimDuration: Int = 100
+    private var mAnimDuration: Int = 0
 //    private var mStrokeWidth: Int = 0
-    private var mTickWidth: Int = 0
-    private var mCheckedColor: Int = Color.parseColor("#169ce4")
+    private var mTickWidth: Int = 3
+    private var mCheckedColor: Int = 0
     private val mUnCheckedColor: Int = Color.TRANSPARENT
     private var mFloorColor: Int = Color.TRANSPARENT
     private var mFloorUnCheckedColor: Int = 0
@@ -50,13 +48,13 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
     private fun initAttr() {
 
         val ta = context.obtainStyledAttributes( R.styleable.LPPAttr)
-        val tickColor = ta.getColor(R.styleable.LPPAttr_l_pp_checkBox_color_tick, Color.WHITE)
-        mAnimDuration = ta.getInt(R.styleable.LPPAttr_l_pp_checkBox_duration, mAnimDuration)
+        val tickColor = ta.getColor(R.styleable.LPPAttr_l_pp_checkBox_color_tick, COLOR_TICK)
+        mAnimDuration = ta.getInt(R.styleable.LPPAttr_l_pp_checkBox_duration, DEF_ANIM_DURATION)
 //        mFloorColor = ta.getColor(R.styleable.LPPSmoothCheckBox_color_unchecked_stroke, Color.TRANSPARENT)
-        mCheckedColor = ta.getColor(R.styleable.LPPAttr_l_pp_checkBox_color_checked, mCheckedColor)
+        mCheckedColor = ta.getColor(R.styleable.LPPAttr_l_pp_checkBox_color_checked, COLOR_CHECKED)
 //        mUnCheckedColor = ta.getColor(R.styleable.LPPSmoothCheckBox_color_unchecked, Color.TRANSPARENT)
 //        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_stroke_width, dp2px(context, 0f))
-        mTickWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_tick_width, mTickWidth)
+        mTickWidth = ta.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_checkBox_tick_width, 0)
         ta.recycle()
 
         mFloorUnCheckedColor = mFloorColor
@@ -132,7 +130,7 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     private fun measureSize(measureSpec: Int): Int {
-        val defSize = context.dp2px(DEF_DRAW_SIZE)
+        val defSize = dp2px(context, DEF_DRAW_SIZE.toFloat())
         val specSize = View.MeasureSpec.getSize(measureSpec)
         val specMode = View.MeasureSpec.getMode(measureSpec)
 
@@ -284,10 +282,18 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
         }, mAnimDuration.toLong() / 2)
     }
 
+
+
     companion object {
         private const val KEY_INSTANCE_STATE = "InstanceState"
 
+        private const val COLOR_TICK = Color.WHITE
+//        private const val COLOR_UNCHECKED = Color.WHITE
+        private val COLOR_CHECKED = Color.parseColor("#169ce4")
+//        private val COLOR_FLOOR_UNCHECKED = Color.parseColor("#DFDFDF")
+
         private const val DEF_DRAW_SIZE = 25
+        private const val DEF_ANIM_DURATION = 100
 
         private fun getGradientColor(startColor: Int, endColor: Int, percent: Float): Int {
             val startA = Color.alpha(startColor)
@@ -305,6 +311,11 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
             val currentG = (startG * (1 - percent) + endG * percent).toInt()
             val currentB = (startB * (1 - percent) + endB * percent).toInt()
             return Color.argb(currentA, currentR, currentG, currentB)
+        }
+
+        fun dp2px(context: Context, dipValue: Float): Int {
+            val scale = context.resources.displayMetrics.density
+            return (dipValue * scale + 0.5f).toInt()
         }
     }
 }

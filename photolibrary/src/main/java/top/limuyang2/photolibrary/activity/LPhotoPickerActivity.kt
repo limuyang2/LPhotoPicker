@@ -8,26 +8,24 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.annotation.StyleRes
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
-import eightbitlab.com.blurview.RenderScriptBlur
+import androidx.annotation.StyleRes
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.l_activity_photo_picker.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
-import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter.Companion.CHECK_BOX_ID
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.popwindow.LPhotoFolderPopWin
 import top.limuyang2.photolibrary.util.*
+
 
 
 /**
@@ -40,7 +38,7 @@ import top.limuyang2.photolibrary.util.*
 class LPhotoPickerActivity : LBaseActivity() {
 
     companion object {
-        //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
+//        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
         private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
         private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
         private const val EXTRA_PAUSE_ON_SCROLL = "EXTRA_PAUSE_ON_SCROLL"
@@ -49,10 +47,15 @@ class LPhotoPickerActivity : LBaseActivity() {
         private const val EXTRA_TYPE = "EXTRA_TYPE"
         private const val EXTRA_THEME = "EXTRA_THEME"
 
+        private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
+
         /**
          * 预览照片的请求码
          */
         private const val RC_PREVIEW_CODE = 2
+
+        private val SPAN_COUNT = 3
+
 
         /**
          * 获取已选择的图片集合
@@ -68,6 +71,14 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     class IntentBuilder(context: Context) {
         private val mIntent: Intent = Intent(context, LPhotoPickerActivity::class.java)
+
+//        /**
+//         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
+//         */
+//        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
+//            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
+//            return this
+//        }
 
         /**
          * 需要显示哪种类型的图片(JPG\PNG\GIF\WEBP)，默认全部加载
@@ -144,8 +155,8 @@ class LPhotoPickerActivity : LBaseActivity() {
         }
     }
 
-    //    // 获取拍照图片保存目录
-    //    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
+//    // 获取拍照图片保存目录
+//    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
 
     // 获取图片选择的最大张数
     private val maxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
@@ -165,12 +176,11 @@ class LPhotoPickerActivity : LBaseActivity() {
     private var segmentingLineWidth: Int = 0
 
     private val adapter by lazy {
-        val width = getScreenWidth()
+        val width = getScreenWidth(this)
         val imgWidth = (width - segmentingLineWidth * (columnsNumber + 1)) / columnsNumber
-
-        PhotoPickerRecyclerAdapter(this, imgWidth, maxChooseCount).apply {
-            setSelectedItemsPath(selectedPhotos)
-        }
+        val a = PhotoPickerRecyclerAdapter(this, maxChooseCount, imgWidth)
+        a.setSelectedItemsPath(selectedPhotos)
+        a
     }
 
     private val folderPopWindow by lazy {
@@ -210,12 +220,12 @@ class LPhotoPickerActivity : LBaseActivity() {
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
-        setStatusBarColor(statusBarColor)
+        setStatusBarColor(this, statusBarColor)
 
-        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(56))
-        val l = appBarLayout.layoutParams
+        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
+        val l = toolBar.layoutParams
         l.height = toolBarHeight
-        appBarLayout.layoutParams = l
+        toolBar.layoutParams = l
 
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
         toolBar.setNavigationIcon(backIcon)
@@ -230,28 +240,16 @@ class LPhotoPickerActivity : LBaseActivity() {
         }
 
         val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#96ffffff"))
-        bottomLayout.setOverlayColor(bottomBarBgColor)
-        val decorView = window.decorView
-        //ViewGroup you want to start blur from. Choose root as close to BlurView in hierarchy as possible.
-//        val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
-        //Set drawable to draw in the beginning of each blurred frame (Optional).
-        //Can be used in case your layout has a lot of transparent space and your content
-        //gets kinda lost after after blur is applied.
-        val windowBackground = decorView.background
-        bottomLayout.setupWith(pickerRecycler)
-                .setFrameClearDrawable(windowBackground)
-                .setBlurAlgorithm(RenderScriptBlur(this))
-                .setBlurRadius(25f)
-                .setHasFixedTransformationMatrix(false)
+        topBlurView.setOverlayColor(bottomBarBgColor)
 
-        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(50))
+        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
         val newBl = bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         bottomLayout.layoutParams = newBl
 
         val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, Color.parseColor("#333333"))
         val bottomBarUnEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_unEnabled_text_color, Color.GRAY)
-        val colors = intArrayOf(bottomBarEnableTextColor, bottomBarUnEnableTextColor)
+        val colors = intArrayOf(bottomBarEnableTextColor,  bottomBarUnEnableTextColor)
         val states = arrayOfNulls<IntArray>(2)
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)
@@ -260,19 +258,18 @@ class LPhotoPickerActivity : LBaseActivity() {
         applyBtn.setTextColor(colorList)
 
         val titleColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
-        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(16).toFloat())
+        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
         photoPickerTitle.setTextColor(titleColor)
         photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
         photoPickerArrow.setColorFilter(titleColor)
 
-        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(5))
+        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(this, 5f).toInt())
 
         typedArray.recycle()
     }
 
     private fun initRecyclerView() {
         pickerRecycler.apply {
-            setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
@@ -290,24 +287,27 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     override fun initListener() {
         toolBar.setNavigationOnClickListener { finish() }
-        titleLayout.singleClick {
-            showPhotoFolderPopWindow()
-        }
-
-        previewBtn.singleClick {
+        titleLayout.setOnClickListener(object : OnNoDoubleClickListener() {
+            override fun onNoDoubleClick(v: View) {
+                showPhotoFolderPopWindow()
+            }
+        })
+        previewBtn.setOnClickListener {
             gotoPreview()
         }
 
-        applyBtn.singleClick {
-            returnSelectedPhotos(adapter.getSelectedItems())
-        }
+        applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
+            override fun onNoDoubleClick(v: View) {
+                returnSelectedPhotos(adapter.getSelectedItems())
+            }
+        })
 
         adapter.onPhotoItemClick = { view, path, _ ->
             if (isSingleChoose) {
                 val list = ArrayList<String>().apply { add(path) }
                 returnSelectedPhotos(list)
             } else {
-                adapter.setChooseItem(path, view.findViewById(CHECK_BOX_ID))
+                adapter.setChooseItem(path, view.findViewById(R.id.checkView))
                 setBottomBtn()
             }
         }
@@ -315,17 +315,16 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     override fun initData() {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                val list = findPhoto(this@LPhotoPickerActivity, showTypeArray)
-                this@LPhotoPickerActivity.photoModelList.addAll(list)
-            }
+        async(UI) {
+            val photoModelList = bg { findPhoto(this@LPhotoPickerActivity, showTypeArray) }.await()
+            this@LPhotoPickerActivity.photoModelList.addAll(photoModelList)
+
             reloadPhotos(0)
         }
     }
 
     private fun reloadPhotos(pos: Int) {
-        if (photoModelList.size > 0 && photoModelList.size >= pos) {
+        if (photoModelList.size >= pos) {
             photoPickerTitle.text = photoModelList[pos].name
             adapter.setData(photoModelList[pos].photoInfoList)
         }
@@ -387,7 +386,7 @@ class LPhotoPickerActivity : LBaseActivity() {
                         }
                     }
 
-                    Activity.RESULT_OK -> {
+                    Activity.RESULT_OK       -> {
                         data?.let {
                             returnSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
                         }
@@ -404,7 +403,7 @@ class LPhotoPickerActivity : LBaseActivity() {
      * @constructor
      */
     private class LPPOnScrollListener(private val context: Context) : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 ImageEngineUtils.engine.resume(context)
             } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {

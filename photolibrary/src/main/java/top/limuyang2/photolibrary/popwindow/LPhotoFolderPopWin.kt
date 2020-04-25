@@ -1,13 +1,31 @@
+/**
+ * Copyright 2016 bingoogolapple
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package top.limuyang2.photolibrary.popwindow
 
 import android.app.Activity
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.l_pp_popwindow_photo_folder.view.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LFolderAdapter
@@ -68,7 +86,7 @@ class LPhotoFolderPopWin(activity: Activity,
             mAnchorView.getLocationInWindow(location)
             val offsetY = location[1] + mAnchorView.height
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-                height = mActivity.getScreenHeight() - offsetY
+                height = getScreenHeight(mActivity) - offsetY
             }
             showAtLocation(mAnchorView, Gravity.NO_GRAVITY, 0, offsetY)
         } else {

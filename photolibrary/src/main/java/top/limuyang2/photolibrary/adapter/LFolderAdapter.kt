@@ -1,12 +1,12 @@
 package top.limuyang2.photolibrary.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
@@ -18,7 +18,7 @@ import java.util.*
  * @author limuyang
  * popWindow适配器
  */
-internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
+class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
 
     private var onPhotoItemClick: OnFolderItemClick? = null
 
@@ -47,6 +47,7 @@ internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapt
         } else ""
 
         ImageEngineUtils.engine.load(context, holder.imgView, path, R.drawable.ic_l_pp_ic_holder_light, holder.imgView.layoutParams.width, holder.imgView.layoutParams.width)
+
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -66,4 +67,4 @@ internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapt
     }
 }
 
-internal typealias OnFolderItemClick = (view: View, pos: Int) -> Unit
+typealias OnFolderItemClick = (view: View, pos: Int) -> Unit

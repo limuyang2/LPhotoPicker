@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/l_pp_toolBar_height"
             android:background="@android:color/transparent">
@@ -19,7 +19,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="@dimen/l_pp_toolBar_height">
+
 
                 <LinearLayout
                     android:id="@+id/titleLayout"
@@ -44,30 +45,37 @@
                         tools:background="#6C9FFC" />
                 </LinearLayout>
 
+
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pickerRecycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="vertical" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
 
 
-    <eightbitlab.com.blurview.BlurView
+    <FrameLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom">
+        android:layout_alignParentBottom="true">
+
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:id="@+id/topBlurView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:realtimeBlurRadius="20dp" />
 
         <Button
             android:id="@+id/previewBtn"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
+            android:layout_gravity="left|center_vertical"
             android:text="@string/l_pp_preview"
             android:textSize="13sp" />
 
@@ -76,10 +84,41 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
+            android:layout_gravity="right|center_vertical"
             android:text="@string/l_pp_apply"
             android:textSize="13sp" />
 
-    </eightbitlab.com.blurview.BlurView>
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center_vertical"-->
+        <!--tools:background="@android:color/holo_orange_dark">-->
 
-</FrameLayout>
+        <!--<Button-->
+        <!--android:id="@+id/previewBtn"-->
+        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="预览"-->
+        <!--android:textSize="13sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <!--<Button-->
+        <!--android:id="@+id/applyBtn"-->
+        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="使用"-->
+        <!--android:textSize="13sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+    </FrameLayout>
+
+</RelativeLayout>

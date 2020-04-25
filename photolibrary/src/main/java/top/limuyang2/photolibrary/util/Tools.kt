@@ -22,24 +22,29 @@ import java.io.File
 /**
  * Value of dp to value of px.
  *
- * @param value The value of dp.
+ * @param dpValue The value of dp.
  * @return value of px
  */
-internal fun Context.dp2px(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+fun dp2px(context: Context, dpValue: Float): Float {
+    val scale = context.resources.displayMetrics.density
+    return (dpValue * scale + 0.5f)
+}
 
 /**
  * Return the status bar's height.
  *
  * @return the status bar's height
  */
-internal fun Context.getStatusBarHeight(): Int {
+fun getStatusBarHeight(context: Context): Int {
+    val resources = context.resources
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return resources.getDimensionPixelSize(resourceId)
 }
 
-internal fun Activity.setStatusBarColor(@ColorInt color: Int) {
+fun setStatusBarColor(activity: Activity, @ColorInt color: Int) {
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = activity.window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = color
 
@@ -56,9 +61,9 @@ internal fun Activity.setStatusBarColor(@ColorInt color: Int) {
  *
  * @return the width of screen, in pixel
  */
-internal fun Context.getScreenWidth(): Int {
-    val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-            ?: return resources.displayMetrics.widthPixels
+fun getScreenWidth(context: Context): Int {
+    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+             ?: return context.resources.displayMetrics.widthPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)
@@ -74,9 +79,9 @@ internal fun Context.getScreenWidth(): Int {
  *
  * @return the height of screen, in pixel
  */
-internal fun Context.getScreenHeight(): Int {
-    val wm = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-            ?: return resources.displayMetrics.heightPixels
+fun getScreenHeight(context: Context): Int {
+    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+             ?: return context.resources.displayMetrics.heightPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)
@@ -86,17 +91,23 @@ internal fun Context.getScreenHeight(): Int {
     return point.y
 }
 
-private fun isNotImageFile(path: String): Boolean {
+fun isNotImageFile(path: String): Boolean {
     if (TextUtils.isEmpty(path)) {
         return true
     }
 
     val file = File(path)
     return !file.exists() || file.length() == 0L
+
+    // 获取图片的宽和高，但不把图片加载到内存中
+    //        BitmapFactory.Options options = new BitmapFactory.Options();
+    //        options.inJustDecodeBounds = true;
+    //        BitmapFactory.decodeFile(path, options);
+    //        return options.outMimeType == null;
 }
 
 
-internal fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
+fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
     val photoModelList = ArrayList<LPhotoModel>()
 
     val typeArray = showType ?: arrayOf("image/jpeg", "image/png", "image/jpg", "image/gif")

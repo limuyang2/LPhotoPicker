@@ -5,9 +5,9 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Build
 import android.provider.MediaStore
-import android.support.annotation.ColorInt
 import android.text.TextUtils
 import android.view.WindowManager
+import androidx.annotation.ColorInt
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.model.LPhotoModel
 import java.io.File

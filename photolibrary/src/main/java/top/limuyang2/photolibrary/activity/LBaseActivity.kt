@@ -1,7 +1,7 @@
 package top.limuyang2.photolibrary.activity
 
 import android.os.Bundle
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 
 /**

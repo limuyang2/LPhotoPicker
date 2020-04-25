@@ -8,16 +8,18 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.Contacts
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.l_activity_photo_picker.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
@@ -315,10 +317,11 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     override fun initData() {
-        async(UI) {
-            val photoModelList = bg { findPhoto(this@LPhotoPickerActivity, showTypeArray) }.await()
-            this@LPhotoPickerActivity.photoModelList.addAll(photoModelList)
-
+        lifecycleScope.launch {
+            val list = withContext(Dispatchers.IO) {
+                findPhoto(this@LPhotoPickerActivity, showTypeArray)
+            }
+            photoModelList.addAll(list)
             reloadPhotos(0)
         }
     }

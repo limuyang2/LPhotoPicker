@@ -25,7 +25,7 @@
             app:realtimeBlurRadius="20dp"
             app:realtimeOverlayColor="#8c000000" />
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/l_pp_toolBar_height"
@@ -48,7 +48,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
     </FrameLayout>
 

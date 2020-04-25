@@ -9,11 +9,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.StyleRes
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
+import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -42,7 +42,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
         initAttr()
         setStatusBar()
-        checkBox.setChecked(true, false)
+        checkBox.setChecked(checked = true, animate = false)
         previewTitleTv.text = "1/${intentSelectedPhotos.size}"
         viewPage.adapter = viewPageAdapter
     }
@@ -67,10 +67,10 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
 
         checkBox.setOnClickListener {
             if (!checkBox.isChecked) {
-                checkBox.setChecked(true, true)
+                checkBox.setChecked(checked = true, animate = true)
                 nowSelectedPhotos.add(currentPath)
             } else {
-                checkBox.setChecked(false, true)
+                checkBox.setChecked(checked = false, animate = true)
                 nowSelectedPhotos.remove(currentPath)
             }
             applyBtn.isEnabled = nowSelectedPhotos.isNotEmpty()

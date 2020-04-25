@@ -1,8 +1,8 @@
 package top.limuyang2.photolibrary.engine
 
 import android.content.Context
-import android.support.annotation.DrawableRes
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 
 interface LImageEngine {
     /**

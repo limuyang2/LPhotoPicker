@@ -11,12 +11,12 @@
         android:orientation="vertical">
 
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/l_pp_toolBar_height"
             android:background="@android:color/transparent">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolBar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/l_pp_toolBar_height">
@@ -46,8 +46,8 @@
                 </LinearLayout>
 
 
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pickerRecycler"

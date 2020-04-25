@@ -1,16 +1,15 @@
 package top.limuyang2.photolibrary.fragment
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.android.synthetic.main.l_pp_fragment_preview_item.view.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
-import top.limuyang2.photolibrary.util.ImageEngineUtils
 
 
 /**
@@ -23,7 +22,6 @@ class LPreviewItemFragment : Fragment() {
     private lateinit var mContext: Context
 
     private var mLastShowHiddenTime = 0L
-
 
     val path by lazy {
         arguments?.getString(PATH_BUNDLE)
@@ -40,7 +38,7 @@ class LPreviewItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.photoView.setOnPhotoTapListener { _, _, _ ->
+        view.photoView.setOnClickListener {
             if (System.currentTimeMillis() - mLastShowHiddenTime > 300) {
                 mLastShowHiddenTime = System.currentTimeMillis()
 
@@ -51,25 +49,8 @@ class LPreviewItemFragment : Fragment() {
             }
         }
 
-        load()
-    }
-
-    private fun load() {
-        view?.let {
-
-            val options = BitmapFactory.Options()
-            /**
-             * 最关键在此，把options.inJustDecodeBounds = true;
-             * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了
-             */
-            options.inJustDecodeBounds = true
-            BitmapFactory.decodeFile(path, options) // 此时返回的bitmap为null
-            /**
-             *options.outHeight为原始图片的高
-             */
-            ImageEngineUtils.engine.load(mContext, it.photoView, path, R.drawable.ic_l_pp_ic_holder_light, options.outWidth, options.outHeight)
-
-        }
+        view.photoView.maxScale = 5f
+        view.photoView.setImage(ImageSource.uri(path ?: ""))
     }
 
     companion object {

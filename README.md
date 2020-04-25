@@ -37,7 +37,7 @@ allprojects {
 ```gradle
 dependencies {
 	
-	implementation 'com.github.limuyang2:LPhotoPicker:1.1.0-x'
+	implementation 'com.github.limuyang2:LPhotoPicker:1.1.1-x'
 }
 ```
 

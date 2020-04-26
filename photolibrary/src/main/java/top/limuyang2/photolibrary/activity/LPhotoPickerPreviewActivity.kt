@@ -22,6 +22,7 @@ import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
 import top.limuyang2.photolibrary.util.dp2px
 import top.limuyang2.photolibrary.util.statusBarHeight
+import top.limuyang2.photolibrary.util.transparentStatusBar
 
 @SuppressLint("SetTextI18n")
 class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
@@ -122,14 +123,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
     private fun setStatusBar() {
         //5.0以上去除半透明遮罩，全透明
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LOW_PROFILE
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.TRANSPARENT
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+        transparentStatusBar()
 
         //获取状态栏高度,设置顶部layout高度
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

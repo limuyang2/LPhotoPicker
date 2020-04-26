@@ -5,11 +5,10 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.l_pp_item_photo_picker.view.*
 import top.limuyang2.photolibrary.R
+import top.limuyang2.photolibrary.databinding.LPpItemPhotoPickerBinding
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
 import top.limuyang2.photolibrary.widget.LPPSmoothCheckBox
@@ -43,14 +42,13 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
     private val selectedSet = HashSet<String>(maxSelectNum)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.l_pp_item_photo_picker, parent, false)
-
-        val imgParams = view.imgView.layoutParams
+        val binding = LPpItemPhotoPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val imgParams = binding.imgView.layoutParams
         imgParams.width = imgWidth
         imgParams.height = imgWidth
-        view.imgView.layoutParams = imgParams
+        binding.imgView.requestLayout()
 
-        val holder = ViewHolder(view)
+        val holder = ViewHolder(binding)
         onPhotoItemClick?.let {
             holder.itemView.setOnClickListener { v -> it(v, list[holder.layoutPosition].photoPath, holder.layoutPosition) }
         }
@@ -63,15 +61,12 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
 
-        ImageEngineUtils.engine.load(context, holder.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.imgView.layoutParams.width, holder.imgView.layoutParams.width)
+        ImageEngineUtils.engine.load(context, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.imgView.layoutParams.width, holder.binding.imgView.layoutParams.width)
 
-        holder.checkBox.setChecked(selectedSet.contains(list[position].photoPath), false)
+        holder.binding.checkView.setChecked(selectedSet.contains(list[position].photoPath), false)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imgView: ImageView = itemView.findViewById(R.id.imgView)
-        val checkBox: LPPSmoothCheckBox = itemView.findViewById(R.id.checkView)
-    }
+    class ViewHolder(val binding: LPpItemPhotoPickerBinding) : RecyclerView.ViewHolder(binding.root)
 
 
     fun setData(list: List<LPhotoModel.PhotoInfo>) {

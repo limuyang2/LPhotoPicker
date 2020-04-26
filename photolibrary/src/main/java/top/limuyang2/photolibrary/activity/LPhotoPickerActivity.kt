@@ -8,7 +8,6 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.Contacts
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.StyleRes
@@ -16,18 +15,17 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.l_activity_photo_picker.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
+import top.limuyang2.photolibrary.databinding.LActivityPhotoPickerBinding
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.popwindow.LPhotoFolderPopWin
 import top.limuyang2.photolibrary.util.*
-
 
 
 /**
@@ -37,7 +35,7 @@ import top.limuyang2.photolibrary.util.*
  */
 
 @Suppress("DEPRECATION")
-class LPhotoPickerActivity : LBaseActivity() {
+class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
 
     companion object {
 //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
@@ -49,15 +47,12 @@ class LPhotoPickerActivity : LBaseActivity() {
         private const val EXTRA_TYPE = "EXTRA_TYPE"
         private const val EXTRA_THEME = "EXTRA_THEME"
 
-        private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
+//        private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
 
         /**
          * 预览照片的请求码
          */
         private const val RC_PREVIEW_CODE = 2
-
-        private val SPAN_COUNT = 3
-
 
         /**
          * 获取已选择的图片集合
@@ -186,20 +181,22 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     private val folderPopWindow by lazy {
-        LPhotoFolderPopWin(this, toolBar, object : LPhotoFolderPopWin.Delegate {
+        LPhotoFolderPopWin(this, viewBinding.toolBar, object : LPhotoFolderPopWin.Delegate {
             override fun onSelectedFolder(position: Int) {
                 reloadPhotos(position)
             }
 
             override fun executeDismissAnim() {
-                ViewCompat.animate(photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(0f).start()
+                ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(0f).start()
             }
         })
     }
 
     private val photoModelList = ArrayList<LPhotoModel>()
 
-    override fun getLayout(): Int = R.layout.l_activity_photo_picker
+    override fun initBinding(): LActivityPhotoPickerBinding {
+        return LActivityPhotoPickerBinding.inflate(layoutInflater)
+    }
 
     override fun getThemeId(): Int = intentTheme
 
@@ -209,7 +206,7 @@ class LPhotoPickerActivity : LBaseActivity() {
         initRecyclerView()
         setBottomBtn()
 
-        applyBtn.isEnabled = selectedPhotos != null && selectedPhotos.isNotEmpty()
+        viewBinding.applyBtn.isEnabled = selectedPhotos != null && selectedPhotos.isNotEmpty()
     }
 
     /**
@@ -225,29 +222,29 @@ class LPhotoPickerActivity : LBaseActivity() {
         setStatusBarColor(this, statusBarColor)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
-        val l = toolBar.layoutParams
+        val l = viewBinding.toolBar.layoutParams
         l.height = toolBarHeight
-        toolBar.layoutParams = l
+        viewBinding.toolBar.layoutParams = l
 
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
-        toolBar.setNavigationIcon(backIcon)
+        viewBinding.toolBar.setNavigationIcon(backIcon)
 
         val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
         val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.l_pp_colorPrimary))
 
         if (toolBarBackgroundRes != 0) {
-            toolBar.setBackgroundResource(toolBarBackgroundRes)
+            viewBinding.toolBar.setBackgroundResource(toolBarBackgroundRes)
         } else {
-            toolBar.setBackgroundColor(toolBarBackgroundColor)
+            viewBinding.toolBar.setBackgroundColor(toolBarBackgroundColor)
         }
 
-        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#96ffffff"))
-        topBlurView.setOverlayColor(bottomBarBgColor)
+        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#D8FFFFFF"))
+        viewBinding.topBlurView.setOverlayColor(bottomBarBgColor)
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
-        val newBl = bottomLayout.layoutParams
+        val newBl = viewBinding.bottomLayout.layoutParams
         newBl.height = bottomBarHeight
-        bottomLayout.layoutParams = newBl
+        viewBinding.bottomLayout.requestLayout()
 
         val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, Color.parseColor("#333333"))
         val bottomBarUnEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_unEnabled_text_color, Color.GRAY)
@@ -256,14 +253,14 @@ class LPhotoPickerActivity : LBaseActivity() {
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)
         val colorList = ColorStateList(states, colors)
-        previewBtn.setTextColor(colorList)
-        applyBtn.setTextColor(colorList)
+        viewBinding.previewBtn.setTextColor(colorList)
+        viewBinding.applyBtn.setTextColor(colorList)
 
         val titleColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
         val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
-        photoPickerTitle.setTextColor(titleColor)
-        photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
-        photoPickerArrow.setColorFilter(titleColor)
+        viewBinding.photoPickerTitle.setTextColor(titleColor)
+        viewBinding.photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
+        viewBinding.photoPickerArrow.setColorFilter(titleColor)
 
         segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(this, 5f).toInt())
 
@@ -271,14 +268,14 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     private fun initRecyclerView() {
-        pickerRecycler.apply {
+        viewBinding.pickerRecycler.apply {
             layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
                 addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber))
-                bottomLayout.visibility = View.GONE
+                viewBinding.bottomLayout.visibility = View.GONE
             } else {
-                addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber, bottomLayout.layoutParams.height))
+                addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber, viewBinding.bottomLayout.layoutParams.height))
             }
 
             if (intent.getBooleanExtra(EXTRA_PAUSE_ON_SCROLL, false)) {
@@ -288,17 +285,17 @@ class LPhotoPickerActivity : LBaseActivity() {
     }
 
     override fun initListener() {
-        toolBar.setNavigationOnClickListener { finish() }
-        titleLayout.setOnClickListener(object : OnNoDoubleClickListener() {
+        viewBinding.toolBar.setNavigationOnClickListener { finish() }
+        viewBinding.titleLayout.setOnClickListener(object : OnNoDoubleClickListener() {
             override fun onNoDoubleClick(v: View) {
                 showPhotoFolderPopWindow()
             }
         })
-        previewBtn.setOnClickListener {
+        viewBinding.previewBtn.setOnClickListener {
             gotoPreview()
         }
 
-        applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
+        viewBinding.applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
             override fun onNoDoubleClick(v: View) {
                 returnSelectedPhotos(adapter.getSelectedItems())
             }
@@ -328,7 +325,7 @@ class LPhotoPickerActivity : LBaseActivity() {
 
     private fun reloadPhotos(pos: Int) {
         if (photoModelList.size >= pos) {
-            photoPickerTitle.text = photoModelList[pos].name
+            viewBinding.photoPickerTitle.text = photoModelList[pos].name
             adapter.setData(photoModelList[pos].photoInfoList)
         }
     }
@@ -337,21 +334,21 @@ class LPhotoPickerActivity : LBaseActivity() {
         folderPopWindow.setData(photoModelList)
         folderPopWindow.show()
 
-        ViewCompat.animate(photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(-180f).start()
+        ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(-180f).start()
     }
 
     @SuppressLint("SetTextI18n")
     private fun setBottomBtn() {
         if (adapter.hasSelected()) {
-            applyBtn.isEnabled = true
-            applyBtn.text = "${getString(R.string.l_pp_apply)}(${adapter.getSelectedItemSize()}/$maxChooseCount)"
+            viewBinding.applyBtn.isEnabled = true
+            viewBinding.applyBtn.text = "${getString(R.string.l_pp_apply)}(${adapter.getSelectedItemSize()}/$maxChooseCount)"
 
-            previewBtn.isEnabled = true
+            viewBinding.previewBtn.isEnabled = true
         } else {
-            applyBtn.isEnabled = false
-            applyBtn.text = getString(R.string.l_pp_apply)
+            viewBinding.applyBtn.isEnabled = false
+            viewBinding.applyBtn.text = getString(R.string.l_pp_apply)
 
-            previewBtn.isEnabled = false
+            viewBinding.previewBtn.isEnabled = false
         }
     }
 

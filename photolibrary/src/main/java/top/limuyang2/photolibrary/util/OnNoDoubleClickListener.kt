@@ -5,7 +5,7 @@ import android.view.View
 abstract class OnNoDoubleClickListener : View.OnClickListener{
 
     companion object {
-        private const val mThrottleFirstTime = 1000
+        private const val mThrottleFirstTime = 500
     }
 
     private var mLastClickTime: Long = 0

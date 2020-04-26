@@ -17,14 +17,14 @@ import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
-import kotlinx.android.synthetic.main.l_pp_activity_photo_picker_preview.*
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
+import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
 import top.limuyang2.photolibrary.util.dp2px
 import top.limuyang2.photolibrary.util.getStatusBarHeight
 
 @SuppressLint("SetTextI18n")
-class LPhotoPickerPreviewActivity : LBaseActivity() {
+class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
 
     private val nowSelectedPhotos = ArrayList<String>()
 
@@ -34,7 +34,9 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
 
     private val viewPageAdapter by lazy { LPreviewPagerAdapter(supportFragmentManager, intentSelectedPhotos) }
 
-    override fun getLayout(): Int = R.layout.l_pp_activity_photo_picker_preview
+    override fun initBinding(): LPpActivityPhotoPickerPreviewBinding {
+        return LPpActivityPhotoPickerPreviewBinding.inflate(layoutInflater)
+    }
 
     override fun getThemeId(): Int = intent.getIntExtra(EXTRA_THEME, R.style.LPhotoTheme)
 
@@ -42,16 +44,16 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
         initAttr()
         setStatusBar()
-        checkBox.setChecked(checked = true, animate = false)
-        previewTitleTv.text = "1/${intentSelectedPhotos.size}"
-        viewPage.adapter = viewPageAdapter
+        viewBinding.checkBox.setChecked(checked = true, animate = false)
+        viewBinding.previewTitleTv.text = "1/${intentSelectedPhotos.size}"
+        viewBinding.viewPage.adapter = viewPageAdapter
     }
 
     var currentPath = ""
 
     override fun initListener() {
-        toolBar.setNavigationOnClickListener { onBackPressed() }
-        viewPage.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        viewBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
+        viewBinding.viewPage.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -59,24 +61,24 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                previewTitleTv.text = "${position + 1}/${intentSelectedPhotos.size}"
+                viewBinding.previewTitleTv.text = "${position + 1}/${intentSelectedPhotos.size}"
                 currentPath = intentSelectedPhotos[position]
-                checkBox.setChecked(nowSelectedPhotos.contains(intentSelectedPhotos[position]), false)
+                viewBinding.checkBox.setChecked(nowSelectedPhotos.contains(intentSelectedPhotos[position]), false)
             }
         })
 
-        checkBox.setOnClickListener {
-            if (!checkBox.isChecked) {
-                checkBox.setChecked(checked = true, animate = true)
+        viewBinding.checkBox.setOnClickListener {
+            if (!viewBinding.checkBox.isChecked) {
+                viewBinding.checkBox.setChecked(checked = true, animate = true)
                 nowSelectedPhotos.add(currentPath)
             } else {
-                checkBox.setChecked(checked = false, animate = true)
+                viewBinding.checkBox.setChecked(checked = false, animate = true)
                 nowSelectedPhotos.remove(currentPath)
             }
-            applyBtn.isEnabled = nowSelectedPhotos.isNotEmpty()
+            viewBinding.applyBtn.isEnabled = nowSelectedPhotos.isNotEmpty()
         }
 
-        applyBtn.setOnClickListener {
+        viewBinding.applyBtn.setOnClickListener {
             val intent = Intent()
             intent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
             setResult(Activity.RESULT_OK, intent)
@@ -93,27 +95,27 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
-        val l = toolBar.layoutParams
+        val l = viewBinding.toolBar.layoutParams
         l.height = toolBarHeight
-        toolBar.layoutParams = l
+        viewBinding.toolBar.layoutParams = l
 
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
-        toolBar.setNavigationIcon(backIcon)
+        viewBinding.toolBar.setNavigationIcon(backIcon)
 
         val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
-        previewTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
+        viewBinding.previewTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
-        val newBl = bottomLayout.layoutParams
+        val newBl = viewBinding.bottomLayout.layoutParams
         newBl.height = bottomBarHeight
-        bottomLayout.layoutParams = newBl
+        viewBinding.bottomLayout.layoutParams = newBl
 
         val colors = intArrayOf(Color.WHITE, Color.GRAY)
         val states = arrayOfNulls<IntArray>(2)
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)
         val colorList = ColorStateList(states, colors)
-        applyBtn.setTextColor(colorList)
+        viewBinding.applyBtn.setTextColor(colorList)
 
         typedArray.recycle()
     }
@@ -132,10 +134,10 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
         //获取状态栏高度,设置顶部layout高度
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val statusHeight = getStatusBarHeight(this)
-            val allHeight = statusHeight + toolBar.layoutParams.height
-            val newLayout = topBlurView.layoutParams
+            val allHeight = statusHeight + viewBinding.toolBar.layoutParams.height
+            val newLayout = viewBinding.topBlurView.layoutParams
             newLayout.height = allHeight
-            topBlurView.layoutParams = newLayout
+            viewBinding.topBlurView.requestLayout()
         }
     }
 
@@ -158,33 +160,33 @@ class LPhotoPickerPreviewActivity : LBaseActivity() {
     }
 
     private fun showTitleBarAndChooseBar() {
-        ViewCompat.animate(toolBarLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
+        ViewCompat.animate(viewBinding.toolBarLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
             override fun onAnimationEnd(view: View?) {
                 mIsHidden = false
             }
         }).setDuration(DURATION_TIME).start()
-        toolBarLayout.visibility = View.VISIBLE
+        viewBinding.toolBarLayout.visibility = View.VISIBLE
 
-        ViewCompat.animate(bottomLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
+        ViewCompat.animate(viewBinding.bottomLayout).translationY(0f).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
             override fun onAnimationEnd(view: View?) {
                 mIsHidden = false
             }
         }).setDuration(DURATION_TIME).start()
-        bottomLayout.visibility = View.VISIBLE
+        viewBinding.bottomLayout.visibility = View.VISIBLE
     }
 
     private fun hiddenToolBarAndChooseBar() {
-        ViewCompat.animate(toolBarLayout).translationY((-toolBarLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
+        ViewCompat.animate(viewBinding.toolBarLayout).translationY((-viewBinding.toolBarLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
             override fun onAnimationEnd(view: View?) {
                 mIsHidden = true
-                toolBarLayout.visibility = View.GONE
+                viewBinding.toolBarLayout.visibility = View.GONE
             }
         }).setDuration(DURATION_TIME).start()
 
-        ViewCompat.animate(bottomLayout).translationY((bottomLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
+        ViewCompat.animate(viewBinding.bottomLayout).translationY((viewBinding.bottomLayout.height).toFloat()).setInterpolator(DecelerateInterpolator(2f)).setListener(object : ViewPropertyAnimatorListenerAdapter() {
             override fun onAnimationEnd(view: View?) {
                 mIsHidden = true
-                bottomLayout.visibility = View.GONE
+                viewBinding.bottomLayout.visibility = View.GONE
             }
         }).setDuration(DURATION_TIME).start()
 

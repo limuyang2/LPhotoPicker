@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.davemorrissey.labs.subscaleview.ImageSource
-import kotlinx.android.synthetic.main.l_pp_fragment_preview_item.view.*
-import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
+import top.limuyang2.photolibrary.databinding.LPpFragmentPreviewItemBinding
 
 
 /**
@@ -20,6 +19,8 @@ import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
 class LPreviewItemFragment : Fragment() {
 
     private lateinit var mContext: Context
+
+    private lateinit var viewBinding: LPpFragmentPreviewItemBinding
 
     private var mLastShowHiddenTime = 0L
 
@@ -33,12 +34,13 @@ class LPreviewItemFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.l_pp_fragment_preview_item, container, false)
+        viewBinding = LPpFragmentPreviewItemBinding.inflate(inflater, container, false)
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.photoView.setOnClickListener {
+        viewBinding.photoView.setOnClickListener {
             if (System.currentTimeMillis() - mLastShowHiddenTime > 300) {
                 mLastShowHiddenTime = System.currentTimeMillis()
 
@@ -49,8 +51,8 @@ class LPreviewItemFragment : Fragment() {
             }
         }
 
-        view.photoView.maxScale = 5f
-        view.photoView.setImage(ImageSource.uri(path ?: ""))
+        viewBinding.photoView.maxScale = 5f
+        viewBinding.photoView.setImage(ImageSource.uri(path ?: ""))
     }
 
     companion object {

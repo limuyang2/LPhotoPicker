@@ -6,6 +6,8 @@ import android.graphics.Point
 import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.ColorInt
 import top.limuyang2.photolibrary.R
@@ -25,45 +27,21 @@ import java.io.File
  * @param dpValue The value of dp.
  * @return value of px
  */
-fun dp2px(context: Context, dpValue: Float): Float {
+internal fun dp2px(context: Context, dpValue: Float): Float {
     val scale = context.resources.displayMetrics.density
     return (dpValue * scale + 0.5f)
 }
 
-/**
- * Return the status bar's height.
- *
- * @return the status bar's height
- */
-fun getStatusBarHeight(context: Context): Int {
-    val resources = context.resources
-    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-    return resources.getDimensionPixelSize(resourceId)
-}
 
-fun setStatusBarColor(activity: Activity, @ColorInt color: Int) {
-    try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color
-
-            //底部导航栏
-            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-}
 
 /**
  * Return the width of screen, in pixel.
  *
  * @return the width of screen, in pixel
  */
-fun getScreenWidth(context: Context): Int {
+internal fun getScreenWidth(context: Context): Int {
     val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-             ?: return context.resources.displayMetrics.widthPixels
+            ?: return context.resources.displayMetrics.widthPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)
@@ -79,9 +57,9 @@ fun getScreenWidth(context: Context): Int {
  *
  * @return the height of screen, in pixel
  */
-fun getScreenHeight(context: Context): Int {
+internal fun getScreenHeight(context: Context): Int {
     val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-             ?: return context.resources.displayMetrics.heightPixels
+            ?: return context.resources.displayMetrics.heightPixels
     val point = Point()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         wm.defaultDisplay.getRealSize(point)
@@ -91,7 +69,7 @@ fun getScreenHeight(context: Context): Int {
     return point.y
 }
 
-fun isNotImageFile(path: String): Boolean {
+internal fun isNotImageFile(path: String): Boolean {
     if (TextUtils.isEmpty(path)) {
         return true
     }
@@ -107,12 +85,12 @@ fun isNotImageFile(path: String): Boolean {
 }
 
 
-fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
+internal fun findPhoto(context: Context, showType: Array<String>?): List<LPhotoModel> {
     val photoModelList = ArrayList<LPhotoModel>()
 
-    val typeArray = showType ?: arrayOf("image/jpeg", "image/png", "image/jpg", "image/gif")
+    val typeArray = showType ?: LPPImageType.ofAll()
     val selectionBuilder = StringBuilder()
-    for (i in 0 until typeArray.size) {
+    for (i in typeArray.indices) {
         if (i == 0) {
             selectionBuilder.append(MediaStore.Images.Media.MIME_TYPE).append("=?")
         } else {

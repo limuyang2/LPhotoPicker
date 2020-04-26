@@ -21,7 +21,7 @@ import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
 import top.limuyang2.photolibrary.util.dp2px
-import top.limuyang2.photolibrary.util.getStatusBarHeight
+import top.limuyang2.photolibrary.util.statusBarHeight
 
 @SuppressLint("SetTextI18n")
 class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
@@ -133,8 +133,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
         //获取状态栏高度,设置顶部layout高度
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val statusHeight = getStatusBarHeight(this)
-            val allHeight = statusHeight + viewBinding.toolBar.layoutParams.height
+            val allHeight = statusBarHeight + viewBinding.toolBar.layoutParams.height
             val newLayout = viewBinding.topBlurView.layoutParams
             newLayout.height = allHeight
             viewBinding.topBlurView.requestLayout()

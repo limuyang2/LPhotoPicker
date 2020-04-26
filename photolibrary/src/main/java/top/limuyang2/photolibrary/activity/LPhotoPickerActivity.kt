@@ -219,7 +219,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
-        setStatusBarColor(this, statusBarColor)
+        setStatusBarColor(statusBarColor)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
         val l = viewBinding.toolBar.layoutParams

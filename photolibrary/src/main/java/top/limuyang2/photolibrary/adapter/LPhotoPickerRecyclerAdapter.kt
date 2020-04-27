@@ -37,7 +37,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
 
     var onPhotoItemChildClick: OnPhotoItemChildClick? = null
 
-    private val list: ArrayList<LPhotoModel.PhotoInfo> = arrayListOf()
+    private val list: ArrayList<LPhotoModel> = arrayListOf()
 
     private val selectedSet = HashSet<String>(maxSelectNum)
 
@@ -69,7 +69,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
     class ViewHolder(val binding: LPpItemPhotoPickerBinding) : RecyclerView.ViewHolder(binding.root)
 
 
-    fun setData(list: List<LPhotoModel.PhotoInfo>) {
+    fun setData(list: List<LPhotoModel>) {
         this.list.clear()
         this.list.addAll(list)
         notifyDataSetChanged()

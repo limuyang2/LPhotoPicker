@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.StyleRes
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +22,6 @@ import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
 import top.limuyang2.photolibrary.databinding.LActivityPhotoPickerBinding
 import top.limuyang2.photolibrary.engine.LImageEngine
-import top.limuyang2.photolibrary.model.LPhotoModel
-import top.limuyang2.photolibrary.popwindow.LPhotoFolderPopWin
 import top.limuyang2.photolibrary.util.*
 
 
@@ -38,7 +35,7 @@ import top.limuyang2.photolibrary.util.*
 class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
 
     companion object {
-//        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
+        //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
         private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
         private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
         private const val EXTRA_PAUSE_ON_SCROLL = "EXTRA_PAUSE_ON_SCROLL"
@@ -168,8 +165,6 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
 
     private val showTypeArray by lazy { intent.getStringArrayExtra(EXTRA_TYPE) }
 
-    private val intentTheme by lazy { intent.getIntExtra(EXTRA_THEME, R.style.LPhotoTheme) }
-
     private var segmentingLineWidth: Int = 0
 
     private val adapter by lazy {
@@ -180,28 +175,27 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
         a
     }
 
-    private val folderPopWindow by lazy {
-        LPhotoFolderPopWin(this, viewBinding.toolBar, object : LPhotoFolderPopWin.Delegate {
-            override fun onSelectedFolder(position: Int) {
-                reloadPhotos(position)
-            }
-
-            override fun executeDismissAnim() {
-                ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(0f).start()
-            }
-        })
-    }
-
-    private val photoModelList = ArrayList<LPhotoModel>()
+//    private val folderPopWindow by lazy {
+//        LPhotoFolderPopWin(this, viewBinding.toolBar, object : LPhotoFolderPopWin.Delegate {
+//            override fun onSelectedFolder(position: Int) {
+//                reloadPhotos(position)
+//            }
+//
+//            override fun executeDismissAnim() {
+//                ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(0f).start()
+//            }
+//        })
+//    }
 
     override fun initBinding(): LActivityPhotoPickerBinding {
         return LActivityPhotoPickerBinding.inflate(layoutInflater)
     }
 
-    override fun getThemeId(): Int = intentTheme
-
     override fun initView(savedInstanceState: Bundle?) {
         initAttr()
+
+        viewBinding.photoPickerTitle.text = intent.getStringExtra("bucketName")
+        println("----->>>  ${intent.getStringExtra("bucketName")}")
 
         initRecyclerView()
         setBottomBtn()
@@ -221,7 +215,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
         setStatusBarColor(statusBarColor)
 
-        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
+        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
         val l = viewBinding.toolBar.layoutParams
         l.height = toolBarHeight
         viewBinding.toolBar.layoutParams = l
@@ -241,14 +235,14 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
         val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#D8FFFFFF"))
         viewBinding.topBlurView.setOverlayColor(bottomBarBgColor)
 
-        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
+        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dip(50).toInt())
         val newBl = viewBinding.bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         viewBinding.bottomLayout.requestLayout()
 
         val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, Color.parseColor("#333333"))
         val bottomBarUnEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_unEnabled_text_color, Color.GRAY)
-        val colors = intArrayOf(bottomBarEnableTextColor,  bottomBarUnEnableTextColor)
+        val colors = intArrayOf(bottomBarEnableTextColor, bottomBarUnEnableTextColor)
         val states = arrayOfNulls<IntArray>(2)
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)
@@ -257,12 +251,11 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
         viewBinding.applyBtn.setTextColor(colorList)
 
         val titleColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
-        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
+        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dip(16))
         viewBinding.photoPickerTitle.setTextColor(titleColor)
         viewBinding.photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
-        viewBinding.photoPickerArrow.setColorFilter(titleColor)
 
-        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dp2px(this, 5f).toInt())
+        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dip(5).toInt())
 
         typedArray.recycle()
     }
@@ -286,11 +279,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
 
     override fun initListener() {
         viewBinding.toolBar.setNavigationOnClickListener { finish() }
-        viewBinding.titleLayout.setOnClickListener(object : OnNoDoubleClickListener() {
-            override fun onNoDoubleClick(v: View) {
-                showPhotoFolderPopWindow()
-            }
-        })
+
         viewBinding.previewBtn.setOnClickListener {
             gotoPreview()
         }
@@ -316,26 +305,14 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
     override fun initData() {
         lifecycleScope.launch {
             val list = withContext(Dispatchers.IO) {
-                findPhoto(this@LPhotoPickerActivity, showTypeArray)
+//                findPhoto(this@LPhotoPickerActivity, showTypeArray)
+                findPhoto(this@LPhotoPickerActivity, intent.getLongExtra("bucketId", -1L), showTypeArray)
             }
-            photoModelList.addAll(list)
-            reloadPhotos(0)
+            println("------------>>> list size  ${list.size}")
+            adapter.setData(list)
         }
     }
 
-    private fun reloadPhotos(pos: Int) {
-        if (photoModelList.size >= pos) {
-            viewBinding.photoPickerTitle.text = photoModelList[pos].name
-            adapter.setData(photoModelList[pos].photoInfoList)
-        }
-    }
-
-    private fun showPhotoFolderPopWindow() {
-        folderPopWindow.setData(photoModelList)
-        folderPopWindow.show()
-
-        ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(-180f).start()
-    }
 
     @SuppressLint("SetTextI18n")
     private fun setBottomBtn() {
@@ -386,7 +363,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
                         }
                     }
 
-                    Activity.RESULT_OK       -> {
+                    Activity.RESULT_OK -> {
                         data?.let {
                             returnSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
                         }

@@ -15,6 +15,8 @@
     <!-- 图片条目背景色 -->
     <color name="l_pp_popWindow_bg">#f9f9f9</color>
 
+    <!-- 文件夹分割线颜色 -->
+    <color name="l_pp_folder_line">#F3F3F3</color>
 
     <color name="l_pp_photo_preview_bg">#000</color>
 

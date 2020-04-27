@@ -10,48 +10,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/l_pp_toolBar_height"
-            android:background="@android:color/transparent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/l_pp_toolBar_height">
-
-                <LinearLayout
-                    android:id="@+id/titleLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/photoPickerTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="全部" />
-
-                    <ImageView
-                        android:id="@+id/photoPickerArrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_l_pp_arrow_down"
-                        android:tint="@android:color/white"
-                        tools:background="#6C9FFC" />
-                </LinearLayout>
+            android:elevation="4dp">
 
 
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+            <TextView
+                android:id="@+id/photoPickerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_gravity="center"
+                tools:text="全部" />
+
+
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pickerRecycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 

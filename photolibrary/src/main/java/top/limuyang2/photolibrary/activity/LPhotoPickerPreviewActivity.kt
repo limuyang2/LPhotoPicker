@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
@@ -20,7 +19,7 @@ import androidx.viewpager.widget.ViewPager
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
-import top.limuyang2.photolibrary.util.dp2px
+import top.limuyang2.photolibrary.util.dip
 import top.limuyang2.photolibrary.util.statusBarHeight
 import top.limuyang2.photolibrary.util.transparentStatusBar
 
@@ -38,8 +37,6 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
     override fun initBinding(): LPpActivityPhotoPickerPreviewBinding {
         return LPpActivityPhotoPickerPreviewBinding.inflate(layoutInflater)
     }
-
-    override fun getThemeId(): Int = intent.getIntExtra(EXTRA_THEME, R.style.LPhotoTheme)
 
     override fun initView(savedInstanceState: Bundle?) {
         window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
@@ -95,7 +92,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dp2px(this, 56f).toInt())
+        val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
         val l = viewBinding.toolBar.layoutParams
         l.height = toolBarHeight
         viewBinding.toolBar.layoutParams = l
@@ -103,10 +100,10 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
         viewBinding.toolBar.setNavigationIcon(backIcon)
 
-        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dp2px(this, 16f))
+        val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dip(16))
         viewBinding.previewTitleTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
 
-        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dp2px(this, 50f).toInt())
+        val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dip(50).toInt())
         val newBl = viewBinding.bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         viewBinding.bottomLayout.layoutParams = newBl

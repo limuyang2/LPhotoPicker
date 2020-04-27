@@ -7,14 +7,14 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        renderscriptTargetApi 28
+        renderscriptTargetApi 29
         renderscriptSupportModeEnabled true
 
     }

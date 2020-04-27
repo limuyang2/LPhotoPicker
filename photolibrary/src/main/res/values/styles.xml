@@ -40,7 +40,7 @@
         <item name="l_pp_toolBar_background">@color/l_pp_colorPrimary</item>
         <item name="l_pp_picker_activity_bg">#F9F9F9</item>
         <item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
-        <item name="l_pp_picker_bottomBar_background">#96ffffff</item>
+        <item name="l_pp_picker_bottomBar_background">#D8FFFFFF</item>
         <item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item>
         <item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底部按钮关闭时的颜色-->
 

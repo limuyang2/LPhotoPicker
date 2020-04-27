@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.databinding.LPpItemPhotoFolderBinding
+import top.limuyang2.photolibrary.model.LFolderModel
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
 import java.util.*
@@ -19,18 +20,25 @@ import java.util.*
  * @author limuyang
  * popWindow适配器
  */
-internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
+internal class LFolderAdapter : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {
 
-    private var onPhotoItemClick: OnFolderItemClick? = null
+    private var onPhotoItemClick: ((view: View, pos: Int, model: LFolderModel) -> Unit)? = null
 
-    private val list: ArrayList<LPhotoModel> = arrayListOf()
+    private val list: ArrayList<LFolderModel> = arrayListOf()
+
+    private lateinit var context: Context
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        context = recyclerView.context
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val biding = LPpItemPhotoFolderBinding.inflate(LayoutInflater.from(context), parent, false)
+        val biding = LPpItemPhotoFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(biding).apply {
             onPhotoItemClick?.let {
                 itemView.setOnClickListener { v ->
-                    it(v, layoutPosition)
+                    it(v, layoutPosition, list[layoutPosition])
                 }
             }
         }
@@ -40,26 +48,25 @@ internal class LFolderAdapter(private val context: Context) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
-        holder.binding.folderCount.text = list[position].photoInfoList.size.toString()
-        holder.binding.folderName.text = list[position].name
 
-        val path = if (list[position].photoInfoList.isNotEmpty()) {
-            list[position].photoInfoList[0].photoPath
-        } else ""
+        val data = list[position]
+        holder.binding.folderCount.text = data.count.toString()
+        holder.binding.folderName.text = data.bucketName
 
-        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, path, R.drawable.ic_l_pp_ic_holder_light, holder.binding.folderPhotoIv.layoutParams.width, holder.binding.folderPhotoIv.layoutParams.width)
+
+        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, data.previewImgPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.folderPhotoIv.layoutParams.width, holder.binding.folderPhotoIv.layoutParams.width)
 
     }
 
     class ViewHolder(val binding: LPpItemPhotoFolderBinding) : RecyclerView.ViewHolder(binding.root)
 
-    fun setData(list: List<LPhotoModel>) {
+    fun setData(list: List<LFolderModel>) {
         this.list.clear()
         this.list.addAll(list)
         notifyDataSetChanged()
     }
 
-    fun setOnItemClick(onPhotoItemClick: OnFolderItemClick?) {
+    fun setOnItemClick(onPhotoItemClick: (view: View, pos: Int, model: LFolderModel) -> Unit) {
         this.onPhotoItemClick = onPhotoItemClick
     }
 }

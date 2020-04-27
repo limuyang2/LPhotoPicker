@@ -12,6 +12,7 @@ import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 import top.limuyang2.photolibrary.engine.LGlideEngine
 import top.limuyang2.photolibrary.util.LPPImageType
@@ -104,7 +105,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    })
                     .build()
 
-            startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
+//            startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
+
+            LPhotoHelper.Builder()
+                    .theme(theme)
+                    .build()
+                    .start(this, CHOOSE_PHOTO_REQUEST)
+
         } else {
             EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n\n2.拍照", PER_REQUEST, WRITE_EXTERNAL_STORAGE)
         }

@@ -175,17 +175,6 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         a
     }
 
-//    private val folderPopWindow by lazy {
-//        LPhotoFolderPopWin(this, viewBinding.toolBar, object : LPhotoFolderPopWin.Delegate {
-//            override fun onSelectedFolder(position: Int) {
-//                reloadPhotos(position)
-//            }
-//
-//            override fun executeDismissAnim() {
-//                ViewCompat.animate(viewBinding.photoPickerArrow).setDuration(LPhotoFolderPopWin.ANIM_DURATION.toLong()).rotation(0f).start()
-//            }
-//        })
-//    }
 
     override fun initBinding(): LPpActivityPhotoPickerBinding {
         return LPpActivityPhotoPickerBinding.inflate(layoutInflater)
@@ -304,10 +293,9 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     override fun initData() {
         lifecycleScope.launch {
             val list = withContext(Dispatchers.IO) {
-//                findPhoto(this@LPhotoPickerActivity, showTypeArray)
                 findPhoto(this@LPhotoPickerActivity, intent.getLongExtra("bucketId", -1L), showTypeArray)
             }
-            println("------------>>> list size  ${list.size}")
+
             adapter.setData(list)
         }
     }

@@ -27,8 +27,7 @@ typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
 typealias OnPhotoItemLongClick = (view: View, path: String, pos: Int) -> Unit
 
 
-class PhotoPickerRecyclerAdapter(private val context: Context,
-                                 private val maxSelectNum: Int,
+class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
                                  private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
 
     var onPhotoItemClick: OnPhotoItemClick? = null
@@ -39,7 +38,14 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
 
     private val list: ArrayList<LPhotoModel> = arrayListOf()
 
+    private lateinit var mContext: Context
+
     private val selectedSet = HashSet<String>(maxSelectNum)
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        mContext = recyclerView.context
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LPpItemPhotoPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -61,7 +67,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
 
-        ImageEngineUtils.engine.load(context, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.imgView.layoutParams.width, holder.binding.imgView.layoutParams.width)
+        ImageEngineUtils.engine.load(mContext, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.imgView.layoutParams.width, holder.binding.imgView.layoutParams.width)
 
         holder.binding.checkView.setChecked(selectedSet.contains(list[position].photoPath), false)
     }
@@ -80,7 +86,7 @@ class PhotoPickerRecyclerAdapter(private val context: Context,
             selectedSet.remove(path)
         } else {
             if (selectedSet.size >= maxSelectNum) {
-                Toast.makeText(context, context.getString(R.string.l_pp_toast_photo_picker_max, maxSelectNum), Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, mContext.getString(R.string.l_pp_toast_photo_picker_max, maxSelectNum), Toast.LENGTH_SHORT).show()
                 return
             }
             selectedSet.add(path)

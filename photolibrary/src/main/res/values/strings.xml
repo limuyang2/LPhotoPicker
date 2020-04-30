@@ -1,5 +1,5 @@
 <resources>
-
+    <string name="l_pp_picture">图片</string>
     <string name="l_pp_take_picture">拍摄照片</string>
     <string name="l_pp_not_support_take_photo">当前设备不支持拍照</string>
     <string name="l_pp_not_support_crop">当前设备不支持裁剪图片</string>

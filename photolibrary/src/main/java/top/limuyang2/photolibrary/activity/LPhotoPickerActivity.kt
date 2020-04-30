@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
-import top.limuyang2.photolibrary.databinding.LActivityPhotoPickerBinding
+import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerBinding
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.util.*
 
@@ -32,7 +32,7 @@ import top.limuyang2.photolibrary.util.*
  */
 
 @Suppress("DEPRECATION")
-class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
+class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
     companion object {
         //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
@@ -170,7 +170,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
     private val adapter by lazy {
         val width = getScreenWidth(this)
         val imgWidth = (width - segmentingLineWidth * (columnsNumber + 1)) / columnsNumber
-        val a = PhotoPickerRecyclerAdapter(this, maxChooseCount, imgWidth)
+        val a = PhotoPickerRecyclerAdapter(maxChooseCount, imgWidth)
         a.setSelectedItemsPath(selectedPhotos)
         a
     }
@@ -187,15 +187,14 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
 //        })
 //    }
 
-    override fun initBinding(): LActivityPhotoPickerBinding {
-        return LActivityPhotoPickerBinding.inflate(layoutInflater)
+    override fun initBinding(): LPpActivityPhotoPickerBinding {
+        return LPpActivityPhotoPickerBinding.inflate(layoutInflater)
     }
 
     override fun initView(savedInstanceState: Bundle?) {
         initAttr()
 
         viewBinding.photoPickerTitle.text = intent.getStringExtra("bucketName")
-        println("----->>>  ${intent.getStringExtra("bucketName")}")
 
         initRecyclerView()
         setBottomBtn()
@@ -272,7 +271,7 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
             }
 
             if (intent.getBooleanExtra(EXTRA_PAUSE_ON_SCROLL, false)) {
-                addOnScrollListener(LPPOnScrollListener(this@LPhotoPickerActivity))
+                addOnScrollListener(LPPOnScrollListener())
             }
         }
     }
@@ -379,12 +378,12 @@ class LPhotoPickerActivity : LBaseActivity<LActivityPhotoPickerBinding>() {
      * @property context Context
      * @constructor
      */
-    private class LPPOnScrollListener(private val context: Context) : RecyclerView.OnScrollListener() {
+    private class LPPOnScrollListener : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                ImageEngineUtils.engine.resume(context)
+                ImageEngineUtils.engine.resume(recyclerView.context)
             } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                ImageEngineUtils.engine.pause(context)
+                ImageEngineUtils.engine.pause(recyclerView.context)
             }
         }
     }

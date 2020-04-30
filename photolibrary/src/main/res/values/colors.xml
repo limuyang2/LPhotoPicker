@@ -9,9 +9,9 @@
 
 
     <!-- 文件夹名称颜色 -->
-    <color name="l_pp_folder_name_textColor">#333333</color>
+    <color name="l_pp_folder_name_textColor">#1C1C1C</color>
     <!-- 文件夹中照片数量颜色 -->
-    <color name="l_pp_folder_count_textColor">#585858</color>
+    <color name="l_pp_folder_count_textColor">#616161</color>
     <!-- 图片条目背景色 -->
     <color name="l_pp_popWindow_bg">#f9f9f9</color>
 

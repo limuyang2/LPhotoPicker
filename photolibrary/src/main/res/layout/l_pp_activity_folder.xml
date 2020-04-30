@@ -8,16 +8,16 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:elevation="4dp"
-        android:layout_height="@dimen/l_pp_toolBar_height">
+        android:layout_height="@dimen/l_pp_toolBar_height"
+        android:elevation="4dp">
 
         <TextView
             android:id="@+id/tool_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:layout_gravity="center"
-            android:text="图片" />
+            android:singleLine="true"
+            android:text="@string/l_pp_picture" />
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -1,25 +1,20 @@
 package top.limuyang2.photolibrary.activity
 
 import android.content.ComponentName
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_TYPE
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LFolderAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityFolderBinding
-import top.limuyang2.photolibrary.util.*
 import top.limuyang2.photolibrary.util.dip
+import top.limuyang2.photolibrary.util.findFolder
 import top.limuyang2.photolibrary.util.setStatusBarColor
-import java.io.File
 
 /**
  * @author 李沐阳

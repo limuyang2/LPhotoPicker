@@ -17,7 +17,7 @@ class LGlideEngine : LImageEngine {
         Glide.with(context)
                 .load(path)
                 .apply(glideOptions.placeholder(placeholderRes).override(resizeX, resizeY))
-                .transition(glideTransition)
+//                .transition(glideTransition)
                 .into(imageView)
     }
 

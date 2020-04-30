@@ -33,7 +33,6 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
         }
     }
 
-    //arrayOf(MediaStore.Images.Media.DATA)
     val cursor = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.BUCKET_ID),

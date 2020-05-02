@@ -108,6 +108,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //            startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
 
             LPhotoHelper.Builder()
+                    .maxChooseCount(multiMumTv.text.toString().toInt())
+                    .columnsNumber(columnsNumberMumTv.text.toString().toInt())
+                    .imageType(LPPImageType.ofAll())
+                    .pauseOnScroll(pauseOnScroll_cb.isChecked)
+                    .isSingleChoose(singleChoose_cb.isChecked)
                     .theme(theme)
                     .build()
                     .start(this, CHOOSE_PHOTO_REQUEST)

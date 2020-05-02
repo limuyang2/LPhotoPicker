@@ -26,7 +26,7 @@
         <item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->
 
         <!--图片分割线宽度-->
-        <item name="l_pp_picker_segmenting_line_width">2dp</item>
+        <item name="l_pp_picker_pic_spacing">2dp</item>
 
         <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
         <item name="l_pp_checkBox_color_tick" format="color">#fff</item><!--勾勾颜色-->
@@ -55,7 +55,7 @@
         <item name="l_pp_picker_bottomBar_unEnabled_text_color">#96ffffff</item><!--底栏按钮关闭时的颜色-->
 
         <!--图片分割线宽度-->
-        <item name="l_pp_picker_segmenting_line_width">2dp</item>
+        <item name="l_pp_picker_pic_spacing">2dp</item>
 
         <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
         <item name="l_pp_checkBox_color_tick" format="color">#fff</item><!--勾勾颜色-->
@@ -84,7 +84,7 @@
         <item name="l_pp_picker_bottomBar_unEnabled_text_color">#96ffffff</item><!--底栏按钮关闭时的颜色-->
 
         <!--图片分割线宽度-->
-        <item name="l_pp_picker_segmenting_line_width">2dp</item>
+        <item name="l_pp_picker_pic_spacing">2dp</item>
 
         <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
         <item name="l_pp_checkBox_color_tick" format="color">#d2d2d2</item><!--勾勾颜色-->

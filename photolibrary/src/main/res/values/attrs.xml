@@ -15,8 +15,8 @@
         <attr name="l_pp_picker_bottomBar_enabled_text_color" format="color"/>
         <attr name="l_pp_picker_bottomBar_unEnabled_text_color" format="color"/>
 
-        <!--图片分割线宽度-->
-        <attr name="l_pp_picker_segmenting_line_width" format="dimension"/>
+
+        <attr name="l_pp_picker_pic_spacing" format="dimension" /><!--图片之间间隔-->
         <attr name="l_pp_toolBar_title_color" format="color"/><!--仅对图片选择页面生效-->
 
         <!--圆形选择框样式-->

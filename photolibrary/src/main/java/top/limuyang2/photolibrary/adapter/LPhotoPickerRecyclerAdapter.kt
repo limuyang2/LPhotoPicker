@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.databinding.LPpItemPhotoPickerBinding
 import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
 import top.limuyang2.photolibrary.widget.LPPSmoothCheckBox
+import kotlin.math.ceil
 
 
 /**
@@ -27,8 +29,8 @@ typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
 typealias OnPhotoItemLongClick = (view: View, path: String, pos: Int) -> Unit
 
 
-class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
-                                 private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
+internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
+                                          private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
 
     var onPhotoItemClick: OnPhotoItemClick? = null
 
@@ -49,17 +51,9 @@ class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LPpItemPhotoPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val imgParams = binding.imgView.layoutParams
-        imgParams.width = imgWidth
-        imgParams.height = imgWidth
-        binding.imgView.requestLayout()
-
-        val holder = ViewHolder(binding)
-        onPhotoItemClick?.let {
-            holder.itemView.setOnClickListener { v -> it(v, list[holder.layoutPosition].photoPath, holder.layoutPosition) }
+        return ViewHolder(binding, imgWidth).apply {
+            itemView.setOnClickListener { v -> onPhotoItemClick?.invoke(v, list[layoutPosition].photoPath, layoutPosition) }
         }
-
-        return holder
     }
 
     override fun getItemCount(): Int = list.size
@@ -72,7 +66,14 @@ class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
         holder.binding.checkView.setChecked(selectedSet.contains(list[position].photoPath), false)
     }
 
-    class ViewHolder(val binding: LPpItemPhotoPickerBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: LPpItemPhotoPickerBinding, imgWidth: Int) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            val lp = binding.imgView.layoutParams
+            lp.width = imgWidth
+            lp.height = imgWidth
+            binding.imgView.layoutParams = lp
+        }
+    }
 
 
     fun setData(list: List<LPhotoModel>) {
@@ -112,35 +113,42 @@ class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
 
 
 /**
- *
- * Date 2018/8/1
- * @author limuyang
  * 分割线 px
+ * @author limuyang
  */
-class LPPGridDivider(private val space: Int, private val columnsNumber: Int, private val bottomLayoutHeight: Int = 0) : RecyclerView.ItemDecoration() {
+internal class LPPGridDivider(private val space: Int, private val columnsNumber: Int, private val bottomLayoutHeight: Int = 0) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        outRect.let {
-            parent.childCount
+        parent.adapter?.let {
+            val lp = view.layoutParams as GridLayoutManager.LayoutParams
+
+            if (lp.spanIndex == 0) {
+                // 第一个，左右两边都带间距
+                outRect.left = space
+                outRect.right = space
+            } else {
+                // 其他的，只有右边带间距
+                outRect.right = space
+            }
 
             //当前第几行, 因为从0行开始，所以要+1
             val nowLine = (parent.getChildAdapterPosition(view) / columnsNumber) + 1
 
             //总行数，从1开始
-            val allLines = Math.ceil((parent.adapter?.itemCount
-                                      ?: 0).toDouble() / columnsNumber).toInt()
+            val allLines = ceil(it.itemCount.toDouble() / columnsNumber).toInt()
+
+
+            if (nowLine == 1) {
+                outRect.top = space
+            }
 
             //最后一行要加上底部工具栏的高度
             if (nowLine == allLines) {
-                it.bottom = space + bottomLayoutHeight
+                outRect.bottom = space + bottomLayoutHeight
             } else {
-                it.bottom = space
+                outRect.bottom = space
             }
 
-            it.left = space
-            it.right = space
-            it.top = space
-            //            it.bottom = space
         }
     }
 }

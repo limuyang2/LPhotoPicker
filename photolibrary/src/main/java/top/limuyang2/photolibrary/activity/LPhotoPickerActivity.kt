@@ -23,6 +23,7 @@ import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerBinding
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.util.*
+import kotlin.math.ceil
 
 
 /**
@@ -165,14 +166,15 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
     private val showTypeArray by lazy { intent.getStringArrayExtra(EXTRA_TYPE) }
 
-    private var segmentingLineWidth: Int = 0
+    // item图片之间间隔
+    private var picSpacing: Int = 0
 
-    private val adapter by lazy {
+    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         val width = getScreenWidth(this)
-        val imgWidth = (width - segmentingLineWidth * (columnsNumber + 1)) / columnsNumber
-        val a = PhotoPickerRecyclerAdapter(maxChooseCount, imgWidth)
-        a.setSelectedItemsPath(selectedPhotos)
-        a
+        val imgWidth = ((width - picSpacing * (columnsNumber + 1).toFloat()) / columnsNumber.toFloat()).toInt()
+        PhotoPickerRecyclerAdapter(maxChooseCount, imgWidth).apply {
+            setSelectedItemsPath(selectedPhotos)
+        }
     }
 
 
@@ -243,7 +245,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         viewBinding.photoPickerTitle.setTextColor(titleColor)
         viewBinding.photoPickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
 
-        segmentingLineWidth = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_segmenting_line_width, dip(5).toInt())
+        picSpacing = typedArray.getDimensionPixelOffset(R.styleable.LPPAttr_l_pp_picker_pic_spacing, dip(4).toInt())
 
         typedArray.recycle()
     }
@@ -253,10 +255,10 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
             layoutManager = GridLayoutManager(this@LPhotoPickerActivity, columnsNumber)
             adapter = this@LPhotoPickerActivity.adapter
             if (isSingleChoose) {
-                addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber))
+                addItemDecoration(LPPGridDivider(picSpacing, columnsNumber))
                 viewBinding.bottomLayout.visibility = View.GONE
             } else {
-                addItemDecoration(LPPGridDivider(segmentingLineWidth, columnsNumber, viewBinding.bottomLayout.layoutParams.height))
+                addItemDecoration(LPPGridDivider(picSpacing, columnsNumber, viewBinding.bottomLayout.layoutParams.height))
             }
 
             if (intent.getBooleanExtra(EXTRA_PAUSE_ON_SCROLL, false)) {

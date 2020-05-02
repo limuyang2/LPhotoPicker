@@ -16,6 +16,7 @@ import top.limuyang2.photolibrary.util.ImageEngineUtils
  */
 class LPhotoHelper internal constructor(private val intent: Intent) {
     companion object {
+        const val EXTRA_LAST_OPENED_ALBUM = "EXTRA_LAST_OPENED_ALBUM"
         const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
         const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
         const val EXTRA_PAUSE_ON_SCROLL = "EXTRA_PAUSE_ON_SCROLL"
@@ -23,6 +24,17 @@ class LPhotoHelper internal constructor(private val intent: Intent) {
         const val EXTRA_IS_SINGLE_CHOOSE = "EXTRA_IS_SINGLE_CHOOSE"
         const val EXTRA_TYPE = "EXTRA_TYPE"
         const val EXTRA_THEME = "EXTRA_THEME"
+
+        /**
+         * 获取已选择的图片集合
+         *
+         * @param intent
+         * @return
+         */
+        @JvmStatic
+        fun getSelectedPhotos(intent: Intent?): ArrayList<String> {
+            return intent?.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: ArrayList()
+        }
     }
 
 
@@ -39,13 +51,13 @@ class LPhotoHelper internal constructor(private val intent: Intent) {
     class Builder {
         private val mIntent: Intent = Intent()
 
-//        /**
-//         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
-//         */
-//        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
-//            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
-//            return this
-//        }
+
+        fun isOpenLastAlbum(isOpen: Boolean): Builder {
+            mIntent.putExtra(EXTRA_LAST_OPENED_ALBUM, isOpen)
+            return this
+        }
+
+
 
         /**
          * 需要显示哪种类型的图片(JPG\PNG\GIF\WEBP)，默认全部加载

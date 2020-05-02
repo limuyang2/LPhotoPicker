@@ -91,28 +91,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //验证权限
         if (EasyPermissions.hasPermissions(this, WRITE_EXTERNAL_STORAGE)) {
 
-            val intent = LPhotoPickerActivity.IntentBuilder(this)
-                    .maxChooseCount(multiMumTv.text.toString().toInt())
-                    .columnsNumber(columnsNumberMumTv.text.toString().toInt())
-                    .imageType(LPPImageType.ofAll())
-                    .pauseOnScroll(pauseOnScroll_cb.isChecked)
-                    .isSingleChoose(singleChoose_cb.isChecked)
-                    .imageEngine(LGlideEngine())
-                    .theme(theme)
-//                    .selectedPhotos(ArrayList<String>().apply {
-//                        add("/storage/emulated/0/DCIM/Screenshots/Screenshot_2018-07-09-11-43-08-936_com.wxm.android.png")
-//                        add("/storage/emulated/0/pictures/li_mumuの二维码.jpg")
-//                    })
-                    .build()
-
-//            startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
-
             LPhotoHelper.Builder()
                     .maxChooseCount(multiMumTv.text.toString().toInt())
                     .columnsNumber(columnsNumberMumTv.text.toString().toInt())
                     .imageType(LPPImageType.ofAll())
                     .pauseOnScroll(pauseOnScroll_cb.isChecked)
                     .isSingleChoose(singleChoose_cb.isChecked)
+                    .isOpenLastAlbum(true)
                     .theme(theme)
                     .build()
                     .start(this, CHOOSE_PHOTO_REQUEST)
@@ -127,7 +112,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 CHOOSE_PHOTO_REQUEST -> {
-                    val selectedPhotos = LPhotoPickerActivity.getSelectedPhotos(data)
+                    val selectedPhotos = LPhotoHelper.getSelectedPhotos(data)
 
                     if (singleChoose_cb.isChecked) { //单选模式
                         if (use_uCrop_cb.isChecked) {

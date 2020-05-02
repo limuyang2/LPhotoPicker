@@ -17,13 +17,18 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_COLUMNS_NUMBER
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_IS_SINGLE_CHOOSE
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_MAX_CHOOSE_COUNT
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_PAUSE_ON_SCROLL
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_SELECTED_PHOTOS
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_TYPE
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerBinding
 import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.util.*
-import kotlin.math.ceil
 
 
 /**
@@ -36,119 +41,12 @@ import kotlin.math.ceil
 class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
     companion object {
-        //        private const val EXTRA_CAMERA_FILE_DIR = "EXTRA_CAMERA_FILE_DIR"
-        private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
-        private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
-        private const val EXTRA_PAUSE_ON_SCROLL = "EXTRA_PAUSE_ON_SCROLL"
-        private const val EXTRA_COLUMNS_NUMBER = "EXTRA_COLUMNS_NUMBER"
-        private const val EXTRA_IS_SINGLE_CHOOSE = "EXTRA_IS_SINGLE_CHOOSE"
-        private const val EXTRA_TYPE = "EXTRA_TYPE"
-        private const val EXTRA_THEME = "EXTRA_THEME"
-
-//        private val STATE_SELECTED_PHOTOS = "STATE_SELECTED_PHOTOS"
-
         /**
          * 预览照片的请求码
          */
         private const val RC_PREVIEW_CODE = 2
-
-        /**
-         * 获取已选择的图片集合
-         *
-         * @param intent
-         * @return
-         */
-        @JvmStatic
-        fun getSelectedPhotos(intent: Intent?): ArrayList<String> {
-            return intent?.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: ArrayList()
-        }
     }
 
-    class IntentBuilder(context: Context) {
-        private val mIntent: Intent = Intent(context, LPhotoPickerActivity::class.java)
-
-//        /**
-//         * 拍照后图片保存的目录。如果传 null 表示没有拍照功能，如果不为 null 则具有拍照功能，
-//         */
-//        fun cameraFileDir(cameraFileDir: File?): IntentBuilder {
-//            mIntent.putExtra(EXTRA_CAMERA_FILE_DIR, cameraFileDir)
-//            return this
-//        }
-
-        /**
-         * 需要显示哪种类型的图片(JPG\PNG\GIF\WEBP)，默认全部加载
-         * @return IntentBuilder
-         */
-        fun imageType(typeArray: Array<String>): IntentBuilder {
-            mIntent.putExtra(EXTRA_TYPE, typeArray)
-            return this
-        }
-
-        /**
-         * 图片选择张数的最大值
-         *
-         * @param maxChooseCount
-         * @return
-         */
-        fun maxChooseCount(maxChooseCount: Int): IntentBuilder {
-            mIntent.putExtra(EXTRA_MAX_CHOOSE_COUNT, maxChooseCount)
-            return this
-        }
-
-        /**
-         * 是否是单选模式，默认false
-         * @param isSingle Boolean
-         * @return IntentBuilder
-         */
-        fun isSingleChoose(isSingle: Boolean): IntentBuilder {
-            mIntent.putExtra(EXTRA_IS_SINGLE_CHOOSE, isSingle)
-            return this
-        }
-
-        /**
-         * 当前已选中的图片路径集合，可以传 null
-         */
-        fun selectedPhotos(selectedPhotos: java.util.ArrayList<String>?): IntentBuilder {
-            mIntent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
-            return this
-        }
-
-        /**
-         * 滚动列表时是否暂停加载图片，默认为 false
-         */
-        fun pauseOnScroll(pauseOnScroll: Boolean): IntentBuilder {
-            mIntent.putExtra(EXTRA_PAUSE_ON_SCROLL, pauseOnScroll)
-            return this
-        }
-
-        /**
-         * 图片选择以几列展示，默认3列
-         */
-        fun columnsNumber(number: Int): IntentBuilder {
-            mIntent.putExtra(EXTRA_COLUMNS_NUMBER, number)
-            return this
-        }
-
-        /**
-         * 设置图片加载引擎
-         */
-        fun imageEngine(engine: LImageEngine): IntentBuilder {
-            ImageEngineUtils.engine = engine
-            return this
-        }
-
-        /**
-         * 设置主题
-         */
-        fun theme(@StyleRes style: Int): IntentBuilder {
-            mIntent.putExtra(EXTRA_THEME, style)
-            return this
-        }
-
-        fun build(): Intent {
-            return mIntent
-        }
-    }
 
 //    // 获取拍照图片保存目录
 //    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
@@ -268,7 +166,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     }
 
     override fun initListener() {
-        viewBinding.toolBar.setNavigationOnClickListener { finish() }
+        viewBinding.toolBar.setNavigationOnClickListener { finishWithCancel() }
 
         viewBinding.previewBtn.setOnClickListener {
             gotoPreview()
@@ -276,14 +174,14 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
         viewBinding.applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
             override fun onNoDoubleClick(v: View) {
-                returnSelectedPhotos(adapter.getSelectedItems())
+                finishWithSelectedPhotos(adapter.getSelectedItems())
             }
         })
 
         adapter.onPhotoItemClick = { view, path, _ ->
             if (isSingleChoose) {
                 val list = ArrayList<String>().apply { add(path) }
-                returnSelectedPhotos(list)
+                finishWithSelectedPhotos(list)
             } else {
                 adapter.setChooseItem(path, view.findViewById(R.id.checkView))
                 setBottomBtn()
@@ -323,10 +221,16 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
      *
      * @param selectedPhotos
      */
-    private fun returnSelectedPhotos(selectedPhotos: ArrayList<String>) {
+    private fun finishWithSelectedPhotos(selectedPhotos: ArrayList<String>) {
         val intent = Intent()
         intent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
         setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    private fun finishWithCancel() {
+        val intent = Intent()
+        setResult(Activity.RESULT_CANCELED, intent)
         finish()
     }
 
@@ -354,13 +258,12 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
                     Activity.RESULT_OK -> {
                         data?.let {
-                            returnSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
+                            finishWithSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
                         }
                     }
                 }
             }
         }
-
     }
 
     /**

@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
 # LPhotoPicker
-这是一个漂亮的、纯粹的图片选择框架，对```对kotlin```的良好支持，java也可使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
+这是一个漂亮的、纯粹的AndroidX图片选择框架，对```对kotlin```的良好支持，java也可使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
 如果你喜欢毛玻璃效果、如果你想拥有最大化的自定义，那么这个库你不容错过。  
 
 > 如果需要图片裁剪，推荐uCrop开源库组合使用[uCrop](https://github.com/Yalantis/uCrop)  
@@ -139,7 +139,7 @@ class LGlideEngine : LImageEngine {
 	<item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->
 
 	<!--图片分割线宽度-->
-	<item name="l_pp_picker_segmenting_line_width">2dp</item>
+	<item name="l_pp_picker_pic_spacing">2dp</item>
 
 	<!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
 	<item name="l_pp_checkBox_color_tick" format="color">#fff</item><!--勾勾颜色-->

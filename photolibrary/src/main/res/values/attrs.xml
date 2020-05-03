@@ -13,7 +13,7 @@
 
         <attr name="l_pp_picker_bottomBar_background" format="color"/>
         <attr name="l_pp_picker_bottomBar_enabled_text_color" format="color"/>
-        <attr name="l_pp_picker_bottomBar_unEnabled_text_color" format="color"/>
+        <attr name="l_pp_picker_bottomBar_disabled_text_color" format="color" />
 
 
         <attr name="l_pp_picker_pic_spacing" format="dimension" /><!--图片之间间隔-->

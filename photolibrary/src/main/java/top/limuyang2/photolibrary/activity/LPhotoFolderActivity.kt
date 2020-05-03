@@ -65,13 +65,13 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
+        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
 
 
         viewBinding.apply {
             // 背景色
-            val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, Color.parseColor("#F9F9F9"))
+            val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, resources.getColor(R.color.l_pp_activity_bg))
             window.setBackgroundDrawable(ColorDrawable(activityBg))
 
             val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
@@ -81,7 +81,7 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
 
             // 导航栏背景
             val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
-            val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.l_pp_colorPrimary))
+            val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.colorPrimary))
             if (toolBarBackgroundRes != 0) {
                 toolBar.setBackgroundResource(toolBarBackgroundRes)
             } else {

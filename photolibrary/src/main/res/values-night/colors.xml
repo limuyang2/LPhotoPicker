@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 状态栏的颜色 -->
-    <color name="l_pp_colorPrimaryDark">#1B1B1B</color>
+    <color name="colorPrimaryDark">#1B1B1B</color>
     <!-- colorPrimary的颜色 -->
-    <color name="l_pp_colorPrimary">#1B1B1B</color>
+    <color name="colorPrimary">#1B1B1B</color>
     <!-- 导航栏的颜色 -->
     <color name="l_pp_navigationBarColor">@android:color/black</color>
 
@@ -23,4 +23,5 @@
     <color name="l_pp_photo_preview_bg">#000</color>
 
     <color name="l_pp_bottomBar_bg">#D8535353</color>
+    <color name="l_pp_bottomBar_enabled_text_color">#F1F1F1</color>
 </resources>

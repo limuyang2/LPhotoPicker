@@ -2,7 +2,6 @@ package top.limuyang2.photolibrary.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -10,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import androidx.annotation.StyleRes
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +25,6 @@ import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerBinding
-import top.limuyang2.photolibrary.engine.LImageEngine
 import top.limuyang2.photolibrary.util.*
 
 
@@ -97,10 +94,10 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, Color.parseColor("#F9F9F9"))
+        val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, resources.getColor(R.color.l_pp_activity_bg))
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
-        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.l_pp_colorPrimaryDark))
+        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
@@ -112,7 +109,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         viewBinding.toolBar.setNavigationIcon(backIcon)
 
         val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
-        val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.l_pp_colorPrimary))
+        val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.colorPrimary))
 
         if (toolBarBackgroundRes != 0) {
             viewBinding.toolBar.setBackgroundResource(toolBarBackgroundRes)
@@ -120,7 +117,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
             viewBinding.toolBar.setBackgroundColor(toolBarBackgroundColor)
         }
 
-        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, Color.parseColor("#D8FFFFFF"))
+        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, resources.getColor(R.color.l_pp_bottomBar_bg))
         viewBinding.topBlurView.setOverlayColor(bottomBarBgColor)
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dip(50).toInt())
@@ -128,9 +125,9 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         newBl.height = bottomBarHeight
         viewBinding.bottomLayout.requestLayout()
 
-        val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, Color.parseColor("#333333"))
-        val bottomBarUnEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_unEnabled_text_color, Color.GRAY)
-        val colors = intArrayOf(bottomBarEnableTextColor, bottomBarUnEnableTextColor)
+        val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, resources.getColor(R.color.l_pp_bottomBar_enabled_text_color))
+        val bottomBarDisableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_disabled_text_color, Color.GRAY)
+        val colors = intArrayOf(bottomBarEnableTextColor, bottomBarDisableTextColor)
         val states = arrayOfNulls<IntArray>(2)
         states[0] = intArrayOf(android.R.attr.state_enabled)
         states[1] = intArrayOf(android.R.attr.state_window_focused)

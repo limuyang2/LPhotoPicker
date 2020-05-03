@@ -13,12 +13,12 @@
 | ---- | ---- | ---- |
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot3.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot4.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot5.jpg)|
 
-|模拟器刘海屏||
-| ---- | ---- |
-|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot1.jpg)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/Screenshot2.jpg)|
+|Dark Mode（暗黑模式）|||
+| ---- | ---- | ---- |
+|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark1.png)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark2.png)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark3.png)|
 
 ### demo下载地址
-[apk下载](https://lanzous.com/ic6yyri)  
+[apk下载](https://lanzous.com/ic8277g)  
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 
@@ -36,20 +36,20 @@ allprojects {
 > 最新版本 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
 ```gradle
 dependencies {
-	
-	implementation 'com.github.limuyang2:LPhotoPicker:2.0'
+    // only support AndroidX
+	implementation 'com.github.limuyang2:LPhotoPicker:2.1'
 }
 ```
 
 在build.gradle中添加以下配置：  
 ```gradle
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
     defaultConfig {
         ………………
 
         //添加以下两句代码
-        renderscriptTargetApi 27  //版本号请与compileSdkVersion保持一致
+        renderscriptTargetApi 29  //版本号请与compileSdkVersion保持一致
         renderscriptSupportModeEnabled true
 
     }
@@ -63,18 +63,16 @@ android {
 
 以下选项根据需要选择性添加：
 ```kotlin
-val intent = LPhotoPickerActivity.IntentBuilder(this)
-               .maxChooseCount(3) //最大多选数目
-               .columnsNumber(4) //以几列显示图片
-               .imageType(LPPImageType.ofAll()) //需要显示的图片类型(webp/PNG/GIF/JPG)
-               .pauseOnScroll(false) //滑动时，是否需要暂停图片加载
-               .isSingleChoose(false) //单选模式
-               .imageEngine(LGlideEngine()) //添加自定义的图片加载引擎(库中已经自带Glide加载引擎，如果你不需要自定义，可不添加此句)
-               .theme(theme) //主题
-               .selectedPhotos(ArrayList<String>()) //已选择的图片数组
-               .build()
-
-startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
+LPhotoHelper.Builder()
+    .maxChooseCount(6) //最多选几个
+    .columnsNumber(3) //每行显示几列图片
+    .imageType(LPPImageType.ofAll()) // 文件类型
+    .pauseOnScroll(false) // 是否滑动暂停加载图片显示
+    .isSingleChoose(false) // 是否是单选
+    .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
+    .theme(theme) // 设置主题
+    .build()
+    .start(this, CHOOSE_PHOTO_REQUEST)
 ```
 在activity```onActivityResult```中接收数据
 ```kotlin
@@ -119,6 +117,9 @@ class LGlideEngine : LImageEngine {
 
 
 ## 更改主题
+### Dark Mode
+如果使用默认主题设置，无需特别处理，自带支持`Dark Mode`
+
 ### 简单设置，仅需一次性固定设置的
 在```style```文中重写以下内容即可（```style```名字必须为```LPhotoTheme```）：
 ```xml
@@ -136,7 +137,7 @@ class LGlideEngine : LImageEngine {
 	<item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
 	<item name="l_pp_picker_bottomBar_background">#96ffffff</item><!--底栏的颜色，如果需要毛玻璃效果，颜色加上透明度-->
 	<item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item><!--底部按钮启用时的颜色-->
-	<item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->
+	<item name="l_pp_picker_bottomBar_disabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->
 
 	<!--图片分割线宽度-->
 	<item name="l_pp_picker_pic_spacing">2dp</item>
@@ -160,25 +161,16 @@ class LGlideEngine : LImageEngine {
 ```
 在代码中调用```theme()```方法设置xml主题：  
 ```
-LPhotoPickerActivity.IntentBuilder(this)
+LPhotoHelper.Builder()
 	……
 	.theme(R.style.MyDarkTheme)
 	.build()
+    .start(this, CHOOSE_PHOTO_REQUEST)
 ```
 
 ## 混淆
-本库所有内容，除Glide外，均可以混淆，已经过测试。  
-添加如下Glide混淆规则即可：(如果自定义了其他图片加载库，请自行添加混淆内容即可)
-```
-#glide 4.x
--keep class com.bumptech.glide.Glide { *; }
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-```
+本库已经自带混淆，已经过测试。  
+(如果自定义了其他图片加载库，请自行添加混淆内容即可)
 
 ## 附录：配合使用uCrop
 先添加[uCrop](https://github.com/Yalantis/uCrop)库，

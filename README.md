@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
 # LPhotoPicker
-这是一个漂亮的、纯粹的AndroidX图片选择框架，对```对kotlin```的良好支持，java也可使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
+这是一个漂亮的、纯粹的`AndroidX`图片选择框架，已适配`Android 10`的沙盒机制，支持`Dark Model`，以及对`kotlin`的良好支持，`java`也可很好的使用。不带裁剪、不带压缩、不带权限管理，没有冗余的第三方库，只为最纯粹的使用，让你更灵活与其他裁剪、压缩库组合使用。  
 如果你喜欢毛玻璃效果、如果你想拥有最大化的自定义，那么这个库你不容错过。  
 
 > 如果需要图片裁剪，推荐uCrop开源库组合使用[uCrop](https://github.com/Yalantis/uCrop)  

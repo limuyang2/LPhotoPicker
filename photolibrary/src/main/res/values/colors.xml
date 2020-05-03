@@ -2,22 +2,26 @@
 <resources>
     <!-- 状态栏的颜色 -->
     <color name="l_pp_colorPrimaryDark">#169ce4</color>
-    <!-- 导航栏的颜色 -->
-    <color name="l_pp_navigationBarColor">@android:color/black</color>
     <!-- colorPrimary的颜色 -->
     <color name="l_pp_colorPrimary">#169ce4</color>
+    <!-- 导航栏的颜色 -->
+    <color name="l_pp_navigationBarColor">@android:color/black</color>
 
+    <color name="l_pp_activity_bg">#F9F9F9</color>
+
+    <!-- 图片文件夹item背景 -->
+    <color name="l_pp_folder_item_bg">#fff</color>
+    <color name="l_pp_folder_item_pressed_bg">#EFEFEF</color>
 
     <!-- 文件夹名称颜色 -->
     <color name="l_pp_folder_name_textColor">#1C1C1C</color>
     <!-- 文件夹中照片数量颜色 -->
     <color name="l_pp_folder_count_textColor">#616161</color>
-    <!-- 图片条目背景色 -->
-    <color name="l_pp_popWindow_bg">#f9f9f9</color>
-
     <!-- 文件夹分割线颜色 -->
     <color name="l_pp_folder_line">#F3F3F3</color>
 
     <color name="l_pp_photo_preview_bg">#000</color>
+
+    <color name="l_pp_bottomBar_bg">#D8FFFFFF</color>
 
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="LPPBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="LPPBaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- 状态栏颜色 -->
         <item name="colorPrimaryDark">@color/l_pp_colorPrimaryDark</item>
         <!-- toolbar（actionbar）背景颜色 -->
@@ -10,9 +10,6 @@
         <item name="android:navigationBarColor" tools:targetApi="lollipop">
             @color/l_pp_navigationBarColor
         </item>
-
-
-
 
     </style>
 
@@ -38,9 +35,9 @@
         <!--图片选择页面属性-->
         <item name="l_pp_status_bar_color">@color/l_pp_colorPrimaryDark</item>
         <item name="l_pp_toolBar_background">@color/l_pp_colorPrimary</item>
-        <item name="l_pp_picker_activity_bg">#F9F9F9</item>
+        <item name="l_pp_picker_activity_bg">@color/l_pp_activity_bg</item>
         <item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
-        <item name="l_pp_picker_bottomBar_background">#D8FFFFFF</item>
+        <item name="l_pp_picker_bottomBar_background">@color/l_pp_bottomBar_bg</item>
         <item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item>
         <item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底部按钮关闭时的颜色-->
 

@@ -2,19 +2,21 @@ package top.limuyang2.pohotopicker
 
 import android.Manifest
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import top.limuyang2.photolibrary.LPhotoHelper
-import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
-import top.limuyang2.photolibrary.engine.LGlideEngine
 import top.limuyang2.photolibrary.util.LPPImageType
 import java.io.File
 
@@ -31,6 +33,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        toolBar.title = getString(R.string.app_name)
+
+        // 获取系统当前是否是暗色模式
+        val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        switchBtn.isChecked = mode == Configuration.UI_MODE_NIGHT_YES
+        // switch 设置点击切换事件
+        switchBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+            }
+        }
 
         columnsNumberSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -65,7 +81,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         theme2Btn.setOnClickListener { getPhoto(R.style.LPhotoTheme2) }
 
-        darkThemeBtn.setOnClickListener { getPhoto(R.style.DarkTheme) }
+        darkThemeBtn.setOnClickListener { getPhoto(R.style.BlackTheme) }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {

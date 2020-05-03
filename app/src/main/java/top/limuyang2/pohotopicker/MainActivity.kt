@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.util.LPPImageType
+import top.limuyang2.pohotopicker.databinding.ActivityMainBinding
 import java.io.File
 
 
@@ -30,17 +30,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         private const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
     }
 
+    private lateinit var viewBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
 
-        toolBar.title = getString(R.string.app_name)
+        viewBinding.toolBar.title = getString(R.string.app_name)
 
         // 获取系统当前是否是暗色模式
         val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        switchBtn.isChecked = mode == Configuration.UI_MODE_NIGHT_YES
+        viewBinding.switchBtn.isChecked = mode == Configuration.UI_MODE_NIGHT_YES
         // switch 设置点击切换事件
-        switchBtn.setOnCheckedChangeListener { _, isChecked ->
+        viewBinding.switchBtn.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
             } else {
@@ -48,9 +51,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
 
-        columnsNumberSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        viewBinding.columnsNumberSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                columnsNumberMumTv.text = (progress + 3).toString()
+                viewBinding.columnsNumberMumTv.text = (progress + 3).toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -60,13 +63,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         })
 
-        singleChoose_cb.setOnCheckedChangeListener { buttonView, isChecked ->
-            multiNumSeekBar.isEnabled = !isChecked
+        viewBinding.useUCropCb.isEnabled = viewBinding.singleChooseCb.isChecked
+        viewBinding.singleChooseCb.setOnCheckedChangeListener { _, isChecked ->
+            viewBinding.useUCropCb.isEnabled = isChecked
+            viewBinding.multiNumSeekBar.isEnabled = !isChecked
         }
 
-        multiNumSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        viewBinding.multiNumSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                multiMumTv.text = (progress + 1).toString()
+                viewBinding.multiMumTv.text = (progress + 1).toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -77,11 +82,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         })
 
 
-        photoBtn.setOnClickListener { getPhoto() }
+        viewBinding.photoBtn.setOnClickListener { getPhoto() }
 
-        theme2Btn.setOnClickListener { getPhoto(R.style.LPhotoTheme2) }
+        viewBinding.theme2Btn.setOnClickListener { getPhoto(R.style.LPhotoTheme2) }
 
-        darkThemeBtn.setOnClickListener { getPhoto(R.style.BlackTheme) }
+        viewBinding.darkThemeBtn.setOnClickListener { getPhoto(R.style.BlackTheme) }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -108,11 +113,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (EasyPermissions.hasPermissions(this, WRITE_EXTERNAL_STORAGE)) {
 
             LPhotoHelper.Builder()
-                    .maxChooseCount(multiMumTv.text.toString().toInt())
-                    .columnsNumber(columnsNumberMumTv.text.toString().toInt())
+                    .maxChooseCount(viewBinding.multiMumTv.text.toString().toInt())
+                    .columnsNumber(viewBinding.columnsNumberMumTv.text.toString().toInt())
                     .imageType(LPPImageType.ofAll())
-                    .pauseOnScroll(pauseOnScroll_cb.isChecked)
-                    .isSingleChoose(singleChoose_cb.isChecked)
+                    .pauseOnScroll(viewBinding.pauseOnScrollCb.isChecked)
+                    .isSingleChoose(viewBinding.singleChooseCb.isChecked)
                     .isOpenLastAlbum(true)
                     .theme(theme)
                     .build()
@@ -130,8 +135,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 CHOOSE_PHOTO_REQUEST -> {
                     val selectedPhotos = LPhotoHelper.getSelectedPhotos(data)
 
-                    if (singleChoose_cb.isChecked) { //单选模式
-                        if (use_uCrop_cb.isChecked) {
+                    if (viewBinding.singleChooseCb.isChecked) { //单选模式
+                        if (viewBinding.useUCropCb.isChecked) {
                             //使用UCrop裁剪图片
                             val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
                             UCrop.of(selectedPhotos[0], outUri)
@@ -139,7 +144,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     .withMaxResultSize(800, 800)
                                     .start(this)
                         } else {
-                            Glide.with(this).load(selectedPhotos[0]).into(imgView)
+                            Glide.with(this).load(selectedPhotos[0]).into(viewBinding.imgView)
                         }
                     } else {
                         var uriStr = ""
@@ -147,15 +152,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             Log.i("MainActivity", uri.toString())
                             uriStr += uri.toString() + "\n"
                         }
-                        multiPathTv.text = uriStr
+                        viewBinding.multiPathTv.text = uriStr
                     }
                 }
 
-                UCrop.REQUEST_CROP   -> {
+                UCrop.REQUEST_CROP -> {
                     data?.let {
                         val resultUri = UCrop.getOutput(data)
                         Log.d("UCrop.REQUEST_CROP", resultUri.toString())
-                        Glide.with(this).load(resultUri).into(imgView)
+                        Glide.with(this).load(resultUri).into(viewBinding.imgView)
                     }
                 }
             }

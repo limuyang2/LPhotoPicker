@@ -235,10 +235,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
     private fun gotoPreview() {
         val intent = LPhotoPickerPreviewActivity.IntentBuilder(this)
-                .maxChooseCount(maxChooseCount)
                 .selectedPhotos(adapter.getSelectedItems())
-                .theme(intentTheme)
-                .isFromTakePhoto(false)
                 .build()
         startActivityForResult(intent, RC_PREVIEW_CODE)
     }
@@ -254,10 +251,10 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
                             setBottomBtn()
                         }
                     }
-
                     Activity.RESULT_OK -> {
                         data?.let {
-                            finishWithSelectedPhotos(LPhotoHelper.getSelectedPhotos(it))
+                            setResult(Activity.RESULT_OK, it)
+                            finish()
                         }
                     }
                 }

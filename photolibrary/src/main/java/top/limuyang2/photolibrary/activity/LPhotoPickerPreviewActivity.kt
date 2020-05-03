@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_SELECTED_PHOTOS
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
@@ -29,8 +30,6 @@ import top.limuyang2.photolibrary.util.transparentStatusBar
 class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
 
     private val nowSelectedPhotos = ArrayList<Uri>()
-
-    private val intentMaxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
 
     private val intentSelectedPhotos by lazy { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
 
@@ -188,26 +187,10 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         private val mIntent: Intent = Intent(context, LPhotoPickerPreviewActivity::class.java)
 
         /**
-         * 图片选择张数的最大值
-         */
-        fun maxChooseCount(maxChooseCount: Int): IntentBuilder {
-            mIntent.putExtra(EXTRA_MAX_CHOOSE_COUNT, maxChooseCount)
-            return this
-        }
-
-        /**
          * 当前已选中的图片路径集合
          */
         fun selectedPhotos(selectedPhotos: ArrayList<Uri>): IntentBuilder {
             mIntent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
-            return this
-        }
-
-        /**
-         * 是否是拍完照后跳转过来
-         */
-        fun isFromTakePhoto(isFromTakePhoto: Boolean): IntentBuilder {
-            mIntent.putExtra(EXTRA_IS_FROM_TAKE_PHOTO, isFromTakePhoto)
             return this
         }
 
@@ -226,11 +209,5 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
     companion object {
         private const val DURATION_TIME = 600L
-
-        //        private const val EXTRA_PREVIEW_PHOTOS = "EXTRA_PREVIEW_PHOTOS"
-        private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
-        private const val EXTRA_THEME = "EXTRA_THEME"
-        private const val EXTRA_IS_FROM_TAKE_PHOTO = "EXTRA_IS_FROM_TAKE_PHOTO"
-
     }
 }

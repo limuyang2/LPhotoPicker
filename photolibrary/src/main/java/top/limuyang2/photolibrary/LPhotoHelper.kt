@@ -3,6 +3,7 @@ package top.limuyang2.photolibrary
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
+import android.net.Uri
 import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
 import top.limuyang2.photolibrary.activity.LPhotoFolderActivity
@@ -32,8 +33,8 @@ class LPhotoHelper internal constructor(private val intent: Intent) {
          * @return
          */
         @JvmStatic
-        fun getSelectedPhotos(intent: Intent?): ArrayList<String> {
-            return intent?.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: ArrayList()
+        fun getSelectedPhotos(intent: Intent?): ArrayList<Uri> {
+            return intent?.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: ArrayList()
         }
     }
 

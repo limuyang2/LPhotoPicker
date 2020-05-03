@@ -1,5 +1,7 @@
 package top.limuyang2.photolibrary.model
 
+import android.net.Uri
+
 /**
  * @author 李沐阳
  * @date：2020/4/26
@@ -7,5 +9,5 @@ package top.limuyang2.photolibrary.model
  */
 internal data class LFolderModel(val bucketName: String = "",
                                  val bucketId: Long = 0,
-                                 val previewImgPath: String = "",
+                                 val previewImgPath: Uri? = null,
                                  var count: Int = -1)

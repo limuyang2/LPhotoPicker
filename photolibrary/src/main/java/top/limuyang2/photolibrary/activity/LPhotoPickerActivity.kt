@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_COLUMNS_NUMBER
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_IS_SINGLE_CHOOSE
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_MAX_CHOOSE_COUNT
@@ -52,7 +54,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     private val maxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
 
     //外部传进来的已选中的图片路径集合
-    private val selectedPhotos by lazy { intent.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS) }
+    private val selectedPhotos by lazy { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
 
     private val isSingleChoose by lazy { intent.getBooleanExtra(EXTRA_IS_SINGLE_CHOOSE, false) }
 
@@ -175,12 +177,12 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
             }
         })
 
-        adapter.onPhotoItemClick = { view, path, _ ->
+        adapter.onPhotoItemClick = { view, uri, _ ->
             if (isSingleChoose) {
-                val list = ArrayList<String>().apply { add(path) }
+                val list = ArrayList<Uri>().apply { add(uri) }
                 finishWithSelectedPhotos(list)
             } else {
-                adapter.setChooseItem(path, view.findViewById(R.id.checkView))
+                adapter.setChooseItem(uri, view.findViewById(R.id.checkView))
                 setBottomBtn()
             }
         }
@@ -218,9 +220,9 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
      *
      * @param selectedPhotos
      */
-    private fun finishWithSelectedPhotos(selectedPhotos: ArrayList<String>) {
+    private fun finishWithSelectedPhotos(selectedPhotos: ArrayList<Uri>) {
         val intent = Intent()
-        intent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
+        intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -248,14 +250,14 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
                 when (resultCode) {
                     Activity.RESULT_CANCELED -> {
                         data?.let {
-                            adapter.setSelectedItemsPath(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
+                            adapter.setSelectedItemsPath(LPhotoHelper.getSelectedPhotos(it))
                             setBottomBtn()
                         }
                     }
 
                     Activity.RESULT_OK -> {
                         data?.let {
-                            finishWithSelectedPhotos(LPhotoPickerPreviewActivity.getSelectedPhotos(it))
+                            finishWithSelectedPhotos(LPhotoHelper.getSelectedPhotos(it))
                         }
                     }
                 }

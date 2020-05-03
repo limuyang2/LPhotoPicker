@@ -148,7 +148,7 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
             val sp = getSharedPreferences("l_pp_sp", Context.MODE_PRIVATE)
             val id = sp.getLong(SP_LAST_BUCKET_ID, 0)
             val name = sp.getString(SP_LAST_BUCKET_NAME, "") ?: ""
-            return LFolderModel(name, id, "", -1)
+            return LFolderModel(name, id, null, -1)
         }
 
     companion object {

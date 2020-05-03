@@ -1,26 +1,17 @@
 package top.limuyang2.photolibrary.util
 
 import android.content.Context
+import android.net.Uri
 import android.provider.MediaStore
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.model.LFolderModel
 import top.limuyang2.photolibrary.model.LPhotoModel
-import java.io.File
 
 /**
  * @author 李沐阳
  * @date：2020/4/27
  * @description:
  */
-
-internal fun isEmptyFile(path: String): Boolean {
-    if (path.isBlank()) {
-        return true
-    }
-
-    val file = File(path)
-    return !file.exists() || file.length() == 0L
-}
 
 internal fun findFolder(context: Context, showType: Array<String>?): List<LFolderModel> {
     val typeArray = showType ?: LPPImageType.ofAll()
@@ -35,7 +26,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
     val cursor = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.BUCKET_ID),
+            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.BUCKET_ID),
             selectionBuilder.toString(),
             typeArray,
             MediaStore.Images.Media.DATE_ADDED
@@ -45,27 +36,25 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
     try {
         if (cursor == null || cursor.count <= 0) {
-            return list.apply { add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1, "", 0)) }
+            return list.apply { add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1, null, 0)) }
         }
 
         var allCount = 0
-        var allFirstPath = ""
+        var allFirstPath: Uri? = null
 
         val tempFolderMap = HashMap<Long, LFolderModel>()
         while (cursor.moveToNext()) {
 
-            val imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            val id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
             val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
             val bucketId = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
 
-            if (isEmptyFile(imagePath)) {
-                continue
-            }
 
             val model = tempFolderMap[bucketId]
             if (model == null) {
-                val newModel = LFolderModel(bucketName, bucketId, imagePath, 1)
+                val uri = getImageUri(id)
+                val newModel = LFolderModel(bucketName, bucketId, uri, 1)
                 tempFolderMap[bucketId] = newModel
             } else {
                 model.count++
@@ -73,7 +62,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
             allCount++
             if (allCount == 1) {
-                allFirstPath = imagePath
+                allFirstPath = getImageUri(id)
             }
         }
 
@@ -81,6 +70,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
         list.addAll(tempFolderMap.values)
 
     } catch (e: Throwable) {
+        e.printStackTrace()
     } finally {
         cursor?.close()
     }
@@ -110,7 +100,7 @@ internal fun findPhoto(context: Context, bucketId: Long, showType: Array<String>
 
     val cursor = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.Media.DISPLAY_NAME),
+            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME),
             selectionBuilder.toString(),
             typeArray,
             MediaStore.Images.Media.DATE_ADDED
@@ -120,15 +110,12 @@ internal fun findPhoto(context: Context, bucketId: Long, showType: Array<String>
         if (cursor == null || cursor.count <= 0) return photoList
 
         while (cursor.moveToNext()) {
-            val imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
 
-            if (isEmptyFile(imagePath)) {
-                continue
-            }
+            val id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
             val name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
 
-            photoList.add(LPhotoModel(name, imagePath))
+            photoList.add(LPhotoModel(id, name, getImageUri(id)))
 
         }
 
@@ -138,4 +125,9 @@ internal fun findPhoto(context: Context, bucketId: Long, showType: Array<String>
     }
 
     return photoList
+}
+
+
+internal fun getImageUri(id: String): Uri {
+    return MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(id).build()
 }

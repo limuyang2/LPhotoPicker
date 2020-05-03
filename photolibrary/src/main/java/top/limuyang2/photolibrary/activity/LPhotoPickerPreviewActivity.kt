@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -16,6 +17,7 @@ import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
+import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_SELECTED_PHOTOS
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
@@ -26,13 +28,15 @@ import top.limuyang2.photolibrary.util.transparentStatusBar
 @SuppressLint("SetTextI18n")
 class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
 
-    private val nowSelectedPhotos = ArrayList<String>()
+    private val nowSelectedPhotos = ArrayList<Uri>()
 
     private val intentMaxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
 
-    private val intentSelectedPhotos by lazy { intent.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS) }
+    private val intentSelectedPhotos by lazy { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
 
     private val viewPageAdapter by lazy { LPreviewPagerAdapter(supportFragmentManager, intentSelectedPhotos) }
+
+    private var currentUri: Uri? = null
 
     override fun initBinding(): LPpActivityPhotoPickerPreviewBinding {
         return LPpActivityPhotoPickerPreviewBinding.inflate(layoutInflater)
@@ -47,7 +51,6 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         viewBinding.viewPage.adapter = viewPageAdapter
     }
 
-    var currentPath = ""
 
     override fun initListener() {
         viewBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
@@ -60,7 +63,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
             override fun onPageSelected(position: Int) {
                 viewBinding.previewTitleTv.text = "${position + 1}/${intentSelectedPhotos.size}"
-                currentPath = intentSelectedPhotos[position]
+                currentUri = intentSelectedPhotos[position]
                 viewBinding.checkBox.setChecked(nowSelectedPhotos.contains(intentSelectedPhotos[position]), false)
             }
         })
@@ -68,17 +71,17 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         viewBinding.checkBox.setOnClickListener {
             if (!viewBinding.checkBox.isChecked) {
                 viewBinding.checkBox.setChecked(checked = true, animate = true)
-                nowSelectedPhotos.add(currentPath)
+                currentUri?.let { nowSelectedPhotos.add(it) }
             } else {
                 viewBinding.checkBox.setChecked(checked = false, animate = true)
-                nowSelectedPhotos.remove(currentPath)
+                nowSelectedPhotos.remove(currentUri)
             }
             viewBinding.applyBtn.isEnabled = nowSelectedPhotos.isNotEmpty()
         }
 
         viewBinding.applyBtn.setOnClickListener {
             val intent = Intent()
-            intent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
+            intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
@@ -86,7 +89,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
     override fun initData() {
         nowSelectedPhotos.addAll(intentSelectedPhotos)
-        currentPath = intentSelectedPhotos[0]
+        currentUri = intentSelectedPhotos[0]
     }
 
     private fun initAttr() {
@@ -133,10 +136,9 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
     override fun onBackPressed() {
         val intent = Intent()
-        intent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
-//        intent.putExtra(EXTRA_IS_FROM_TAKE_PHOTO, mIsFromTakePhoto)
+        intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
         setResult(Activity.RESULT_CANCELED, intent)
-        finish()
+        super.onBackPressed()
     }
 
     private var mIsHidden = false
@@ -196,8 +198,8 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         /**
          * 当前已选中的图片路径集合
          */
-        fun selectedPhotos(selectedPhotos: ArrayList<String>): IntentBuilder {
-            mIntent.putStringArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
+        fun selectedPhotos(selectedPhotos: ArrayList<Uri>): IntentBuilder {
+            mIntent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, selectedPhotos)
             return this
         }
 
@@ -226,19 +228,9 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         private const val DURATION_TIME = 600L
 
         //        private const val EXTRA_PREVIEW_PHOTOS = "EXTRA_PREVIEW_PHOTOS"
-        private const val EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS"
         private const val EXTRA_MAX_CHOOSE_COUNT = "EXTRA_MAX_CHOOSE_COUNT"
         private const val EXTRA_THEME = "EXTRA_THEME"
         private const val EXTRA_IS_FROM_TAKE_PHOTO = "EXTRA_IS_FROM_TAKE_PHOTO"
 
-        /**
-         * 获取已选择的图片集合
-         *
-         * @param intent
-         * @return
-         */
-        fun getSelectedPhotos(intent: Intent): ArrayList<String> {
-            return intent.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS)
-        }
     }
 }

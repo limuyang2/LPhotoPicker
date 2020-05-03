@@ -2,6 +2,7 @@ package top.limuyang2.photolibrary.adapter
 
 import android.content.Context
 import android.graphics.Rect
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import kotlin.math.ceil
  * @author limuyang
  */
 
-typealias OnPhotoItemClick = (view: View, path: String, pos: Int) -> Unit
+typealias OnPhotoItemClick = (view: View, uri: Uri, pos: Int) -> Unit
 
 typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
 
@@ -42,7 +43,7 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
 
     private lateinit var mContext: Context
 
-    private val selectedSet = HashSet<String>(maxSelectNum)
+    private val selectedSet = HashSet<Uri>(maxSelectNum)
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -52,7 +53,7 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LPpItemPhotoPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, imgWidth).apply {
-            itemView.setOnClickListener { v -> onPhotoItemClick?.invoke(v, list[layoutPosition].photoPath, layoutPosition) }
+            itemView.setOnClickListener { v -> onPhotoItemClick?.invoke(v, list[adapterPosition].photoPath, layoutPosition) }
         }
     }
 
@@ -82,27 +83,27 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
         notifyDataSetChanged()
     }
 
-    fun setChooseItem(path: String, checkBox: LPPSmoothCheckBox) {
-        if (selectedSet.contains(path)) {
-            selectedSet.remove(path)
+    fun setChooseItem(uri: Uri, checkBox: LPPSmoothCheckBox) {
+        if (selectedSet.contains(uri)) {
+            selectedSet.remove(uri)
         } else {
             if (selectedSet.size >= maxSelectNum) {
                 Toast.makeText(mContext, mContext.getString(R.string.l_pp_toast_photo_picker_max, maxSelectNum), Toast.LENGTH_SHORT).show()
                 return
             }
-            selectedSet.add(path)
+            selectedSet.add(uri)
         }
 
         checkBox.setChecked(!checkBox.isChecked, true)
     }
 
-    fun getSelectedItems(): ArrayList<String> = ArrayList<String>().apply { addAll(selectedSet) }
+    fun getSelectedItems(): ArrayList<Uri> = ArrayList<Uri>().apply { addAll(selectedSet) }
 
     fun getSelectedItemSize(): Int = selectedSet.size
 
     fun hasSelected(): Boolean = selectedSet.isNotEmpty()
 
-    fun setSelectedItemsPath(pathList: List<String>?) {
+    fun setSelectedItemsPath(pathList: List<Uri>?) {
         selectedSet.clear()
         pathList?.let {
             selectedSet.addAll(it)

@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         if (use_uCrop_cb.isChecked) {
                             //使用UCrop裁剪图片
                             val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
-                            UCrop.of(Uri.fromFile(File(selectedPhotos[0])), outUri)
+                            UCrop.of(selectedPhotos[0], outUri)
                                     .withAspectRatio(1f, 1f)
                                     .withMaxResultSize(800, 800)
                                     .start(this)
@@ -142,12 +142,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             Glide.with(this).load(selectedPhotos[0]).into(imgView)
                         }
                     } else {
-                        var pathStr = ""
-                        for (path in selectedPhotos) {
-                            Log.i("MainActivity", path)
-                            pathStr += path + "\n"
+                        var uriStr = ""
+                        for (uri in selectedPhotos) {
+                            Log.i("MainActivity", uri.toString())
+                            uriStr += uri.toString() + "\n"
                         }
-                        multiPathTv.text = pathStr
+                        multiPathTv.text = uriStr
                     }
                 }
 

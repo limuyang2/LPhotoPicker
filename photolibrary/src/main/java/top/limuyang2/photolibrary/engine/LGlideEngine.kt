@@ -1,6 +1,7 @@
 package top.limuyang2.photolibrary.engine
 
 import android.content.Context
+import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
@@ -16,7 +17,7 @@ class LGlideEngine : LImageEngine {
 
     private val glideOptions by lazy { RequestOptions().centerCrop() }
 
-    override fun load(context: Context, imageView: ImageView, path: String?, @DrawableRes placeholderRes: Int, resizeX: Int, resizeY: Int) {
+    override fun load(context: Context, imageView: ImageView, path: Uri?, @DrawableRes placeholderRes: Int, resizeX: Int, resizeY: Int) {
         Glide.with(context)
                 .load(path)
                 .apply(glideOptions.placeholder(placeholderRes).override(resizeX, resizeY))

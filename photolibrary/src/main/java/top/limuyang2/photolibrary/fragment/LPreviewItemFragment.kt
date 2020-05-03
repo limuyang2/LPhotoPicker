@@ -1,6 +1,7 @@
 package top.limuyang2.photolibrary.fragment
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,8 +25,8 @@ class LPreviewItemFragment : Fragment() {
 
     private var mLastShowHiddenTime = 0L
 
-    val path by lazy {
-        arguments?.getString(PATH_BUNDLE)
+    private val uri by lazy(LazyThreadSafetyMode.NONE) {
+        arguments?.getParcelable<Uri>(URI_BUNDLE)
     }
 
     override fun onAttach(context: Context) {
@@ -52,18 +53,21 @@ class LPreviewItemFragment : Fragment() {
         }
 
         viewBinding.photoView.maxScale = 5f
-        viewBinding.photoView.setImage(ImageSource.uri(path ?: ""))
+
+        uri?.let {
+            viewBinding.photoView.setImage(ImageSource.uri(it))
+        }
     }
 
     companion object {
-        fun buildFragment(path: String): LPreviewItemFragment {
+        fun buildFragment(uri: Uri): LPreviewItemFragment {
             val bundle = Bundle()
-            bundle.putString(PATH_BUNDLE, path)
+            bundle.putParcelable(URI_BUNDLE, uri)
             val fragment = LPreviewItemFragment()
             fragment.arguments = bundle
             return fragment
         }
 
-        private const val PATH_BUNDLE = "PATH_BUNDLE"
+        private const val URI_BUNDLE = "PATH_BUNDLE"
     }
 }

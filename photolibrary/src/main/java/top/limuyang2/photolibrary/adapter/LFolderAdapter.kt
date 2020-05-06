@@ -53,8 +53,8 @@ internal class LFolderAdapter : RecyclerView.Adapter<LFolderAdapter.ViewHolder>(
         holder.binding.folderCount.text = data.count.toString()
         holder.binding.folderName.text = data.bucketName
 
-
-        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, data.previewImgPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.folderPhotoIv.layoutParams.width, holder.binding.folderPhotoIv.layoutParams.width)
+        val resize = holder.binding.folderPhotoIv.layoutParams.width
+        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, data.previewImgPath, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
 
     }
 

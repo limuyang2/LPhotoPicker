@@ -69,6 +69,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         val width = getScreenWidth(this)
         val imgWidth = ((width - picSpacing * (columnsNumber + 1).toFloat()) / columnsNumber.toFloat()).toInt()
+
         PhotoPickerRecyclerAdapter(maxChooseCount, imgWidth).apply {
             setSelectedItemsPath(selectedPhotos)
         }

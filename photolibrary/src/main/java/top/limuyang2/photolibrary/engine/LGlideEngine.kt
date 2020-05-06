@@ -20,7 +20,7 @@ class LGlideEngine : LImageEngine {
     override fun load(context: Context, imageView: ImageView, path: Uri?, @DrawableRes placeholderRes: Int, resizeX: Int, resizeY: Int) {
         Glide.with(context)
                 .load(path)
-                .apply(glideOptions.placeholder(placeholderRes).override(resizeX, resizeY))
+                .apply(glideOptions.placeholder(placeholderRes).override(resizeY))
                 .transform(CenterCrop(), RoundedCorners(context.dip(4).toInt()))
 //                .transition(glideTransition)
                 .into(imageView)

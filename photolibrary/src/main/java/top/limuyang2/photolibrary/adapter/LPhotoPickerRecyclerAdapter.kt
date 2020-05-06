@@ -25,19 +25,10 @@ import kotlin.math.ceil
 
 typealias OnPhotoItemClick = (view: View, uri: Uri, pos: Int) -> Unit
 
-typealias OnPhotoItemChildClick = (view: View, path: String, pos: Int) -> Unit
-
-typealias OnPhotoItemLongClick = (view: View, path: String, pos: Int) -> Unit
-
-
 internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
                                           private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {
 
     var onPhotoItemClick: OnPhotoItemClick? = null
-
-    var onPhotoItemLongClick: OnPhotoItemLongClick? = null
-
-    var onPhotoItemChildClick: OnPhotoItemChildClick? = null
 
     private val list: ArrayList<LPhotoModel> = arrayListOf()
 
@@ -62,7 +53,8 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
 
-        ImageEngineUtils.engine.load(mContext, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, holder.binding.imgView.layoutParams.width, holder.binding.imgView.layoutParams.width)
+        val resize = holder.binding.imgView.layoutParams.height
+        ImageEngineUtils.engine.load(mContext, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
 
         holder.binding.checkView.setChecked(selectedSet.contains(list[position].photoPath), false)
     }
@@ -70,7 +62,6 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
     class ViewHolder(val binding: LPpItemPhotoPickerBinding, imgWidth: Int) : RecyclerView.ViewHolder(binding.root) {
         init {
             val lp = binding.imgView.layoutParams
-            lp.width = imgWidth
             lp.height = imgWidth
             binding.imgView.layoutParams = lp
         }

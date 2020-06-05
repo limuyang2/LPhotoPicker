@@ -11,6 +11,10 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Checkable
 import top.limuyang2.photolibrary.R
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+
 /**
  *
  */
@@ -136,7 +140,7 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
 
         var result = 0
         when (specMode) {
-            View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.AT_MOST -> result = Math.min(defSize, specSize)
+            View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.AT_MOST -> result = defSize.coerceAtMost(specSize)
             View.MeasureSpec.EXACTLY -> result = specSize
         }
         return result
@@ -153,15 +157,15 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
         mCenterPoint.x = mWidth / 2
         mCenterPoint.y = measuredHeight / 2
 
-        mTickPoints[0].x = Math.round(measuredWidth.toFloat() / 30 * 7)
-        mTickPoints[0].y = Math.round(measuredHeight.toFloat() / 30 * 14)
-        mTickPoints[1].x = Math.round(measuredWidth.toFloat() / 30 * 13)
-        mTickPoints[1].y = Math.round(measuredHeight.toFloat() / 30 * 20)
-        mTickPoints[2].x = Math.round(measuredWidth.toFloat() / 30 * 22)
-        mTickPoints[2].y = Math.round(measuredHeight.toFloat() / 30 * 10)
+        mTickPoints[0].x = (measuredWidth.toFloat() / 30 * 7).roundToInt()
+        mTickPoints[0].y = (measuredHeight.toFloat() / 30 * 14).roundToInt()
+        mTickPoints[1].x = (measuredWidth.toFloat() / 30 * 13).roundToInt()
+        mTickPoints[1].y = (measuredHeight.toFloat() / 30 * 20).roundToInt()
+        mTickPoints[2].x = (measuredWidth.toFloat() / 30 * 22).roundToInt()
+        mTickPoints[2].y = (measuredHeight.toFloat() / 30 * 10).roundToInt()
 
-        mLeftLineDistance = Math.sqrt(Math.pow((mTickPoints[1].x - mTickPoints[0].x).toDouble(), 2.0) + Math.pow((mTickPoints[1].y - mTickPoints[0].y).toDouble(), 2.0)).toFloat()
-        mRightLineDistance = Math.sqrt(Math.pow((mTickPoints[2].x - mTickPoints[1].x).toDouble(), 2.0) + Math.pow((mTickPoints[2].y - mTickPoints[1].y).toDouble(), 2.0)).toFloat()
+        mLeftLineDistance = sqrt((mTickPoints[1].x - mTickPoints[0].x).toDouble().pow(2.0) + (mTickPoints[1].y - mTickPoints[0].y).toDouble().pow(2.0)).toFloat()
+        mRightLineDistance = sqrt((mTickPoints[2].x - mTickPoints[1].x).toDouble().pow(2.0) + (mTickPoints[2].y - mTickPoints[1].y).toDouble().pow(2.0)).toFloat()
 
         mTickPaint.strokeWidth = if (mTickWidth <= 0) measuredWidth / 10f else mTickWidth.toFloat()
     }

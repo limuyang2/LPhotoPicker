@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="l_pp_picture">Picture</string>
+    <string name="l_pp_toast_photo_picker_max">Only %1$d picture can be selected</string>
+    <string name="l_pp_all_image">All pictures</string>
+    <string name="l_pp_preview">Preview</string>
+    <string name="l_pp_apply">Use</string>
+    <string name="l_pp_view_photo">View image</string>
+</resources>

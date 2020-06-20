@@ -1,6 +1,7 @@
 package top.limuyang2.photolibrary.activity
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,21 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(intentTheme)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val modes = window.windowManager.defaultDisplay.supportedModes
+            modes.sortBy {
+                it.refreshRate
+            }
+
+            window.let {
+                val lp = it.attributes
+                lp.preferredDisplayModeId = modes.last().modeId
+                it.attributes = lp
+            }
+        }
+
+
         super.onCreate(savedInstanceState)
         viewBinding = initBinding()
         setContentView(viewBinding.root)

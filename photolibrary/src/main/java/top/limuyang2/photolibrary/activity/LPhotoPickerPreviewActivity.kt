@@ -22,6 +22,7 @@ import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
+import top.limuyang2.photolibrary.util.click
 import top.limuyang2.photolibrary.util.dip
 import top.limuyang2.photolibrary.util.statusBarHeight
 import top.limuyang2.photolibrary.util.transparentStatusBar
@@ -78,7 +79,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
             viewBinding.applyBtn.isEnabled = nowSelectedPhotos.isNotEmpty()
         }
 
-        viewBinding.applyBtn.setOnClickListener {
+        viewBinding.applyBtn.click {
             val intent = Intent()
             intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
             setResult(Activity.RESULT_OK, intent)

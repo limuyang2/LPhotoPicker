@@ -9,5 +9,5 @@ import android.net.Uri
  */
 internal data class LFolderModel(val bucketName: String = "",
                                  val bucketId: Long = 0,
-                                 val previewImgPath: Uri? = null,
+                                 var previewImgPath: Uri? = null,
                                  var count: Int = -1)

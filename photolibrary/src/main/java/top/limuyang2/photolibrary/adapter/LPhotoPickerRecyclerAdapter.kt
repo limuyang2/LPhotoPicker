@@ -44,7 +44,10 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LPpItemPhotoPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, imgWidth).apply {
-            itemView.setOnClickListener { v -> onPhotoItemClick?.invoke(v, list[adapterPosition].photoPath, layoutPosition) }
+            itemView.setOnClickListener { v ->
+                val item = list.getOrNull(adapterPosition)?.photoPath ?: return@setOnClickListener
+                onPhotoItemClick?.invoke(v, item, layoutPosition)
+            }
         }
     }
 

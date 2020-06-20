@@ -168,15 +168,13 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     override fun initListener() {
         viewBinding.toolBar.setNavigationOnClickListener { finishWithCancel() }
 
-        viewBinding.previewBtn.setOnClickListener {
+        viewBinding.previewBtn.click {
             gotoPreview()
         }
 
-        viewBinding.applyBtn.setOnClickListener(object : OnNoDoubleClickListener() {
-            override fun onNoDoubleClick(v: View) {
-                finishWithSelectedPhotos(adapter.getSelectedItems())
-            }
-        })
+        viewBinding.applyBtn.click {
+            finishWithSelectedPhotos(adapter.getSelectedItems())
+        }
 
         adapter.onPhotoItemClick = { view, uri, _ ->
             if (isSingleChoose) {
@@ -193,10 +191,11 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     override fun initData() {
         lifecycleScope.launch {
             val list = withContext(Dispatchers.IO) {
-                findPhoto(this@LPhotoPickerActivity, intent.getLongExtra("bucketId", -1L), showTypeArray)
+                findPhoto(intent.getLongExtra("bucketId", -1L), showTypeArray)
             }
 
             adapter.setData(list)
+            viewBinding.pickerRecycler.scrollToPosition(adapter.itemCount - 1)
         }
     }
 

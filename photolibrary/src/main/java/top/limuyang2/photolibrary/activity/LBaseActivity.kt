@@ -1,6 +1,7 @@
 package top.limuyang2.photolibrary.activity
 
 import android.content.Intent
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.LayoutRes
@@ -32,15 +33,26 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
         setTheme(intentTheme)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val modes = window.windowManager.defaultDisplay.supportedModes
+
+            val display = window.windowManager.defaultDisplay
+
+            val nowPoint = Point()
+            display.getRealSize(nowPoint)
+
+            val modes = display.supportedModes
+
             modes.sortBy {
                 it.refreshRate
             }
 
-            window.let {
-                val lp = it.attributes
-                lp.preferredDisplayModeId = modes.last().modeId
-                it.attributes = lp
+            val filterModes = modes.filter {
+                it.physicalWidth == nowPoint.x && it.physicalHeight == nowPoint.y
+            }
+
+            filterModes.lastOrNull()?.let {
+                val lp = window.attributes
+                lp.preferredDisplayModeId = it.modeId
+                window.attributes = lp
             }
         }
 

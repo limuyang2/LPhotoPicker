@@ -32,7 +32,7 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(intentTheme)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val display = window.windowManager.defaultDisplay
 

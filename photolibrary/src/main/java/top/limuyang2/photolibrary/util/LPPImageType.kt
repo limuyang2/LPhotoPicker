@@ -1,5 +1,6 @@
 package top.limuyang2.photolibrary.util
 
+import android.media.MediaFormat.MIMETYPE_IMAGE_ANDROID_HEIC
 import java.util.*
 
 /**
@@ -20,6 +21,10 @@ enum class LPPImageType {
 
     GIF {
         override fun getType(): Array<String> = arrayOf("image/gif")
+    },
+
+    HEIF {
+        override fun getType(): Array<String> = arrayOf("image/heic")
     };
 
     abstract fun getType(): Array<String>
@@ -32,6 +37,7 @@ enum class LPPImageType {
             addAll(PNG.getType())
             addAll(WEBP.getType())
             addAll(GIF.getType())
+            addAll(HEIF.getType())
         }.toTypedArray()
 
         @JvmStatic

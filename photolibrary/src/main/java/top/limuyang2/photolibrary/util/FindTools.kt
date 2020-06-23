@@ -51,7 +51,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
             id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
-            val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+            val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)) ?: "根目录"
             val bucketId = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
 
 

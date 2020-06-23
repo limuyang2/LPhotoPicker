@@ -46,7 +46,7 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
             }
 
             val filterModes = modes.filter {
-                it.physicalWidth == nowPoint.x && it.physicalHeight == nowPoint.y
+                it.refreshRate <= 90f && it.physicalWidth == nowPoint.x && it.physicalHeight == nowPoint.y
             }
 
             filterModes.lastOrNull()?.let {

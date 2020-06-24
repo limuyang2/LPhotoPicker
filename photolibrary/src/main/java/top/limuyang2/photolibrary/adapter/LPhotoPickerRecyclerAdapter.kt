@@ -56,10 +56,13 @@ internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (list.isEmpty()) return
 
-        val resize = holder.binding.imgView.layoutParams.height
-        ImageEngineUtils.engine.load(mContext, holder.binding.imgView, list[position].photoPath, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
+        val data = list[position]
 
-        holder.binding.checkView.setChecked(selectedSet.contains(list[position].photoPath), false)
+        val resize = holder.binding.imgView.layoutParams.height
+
+        ImageEngineUtils.engine.load(mContext, holder.binding.imgView, data.photoPath, data.imageType, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
+
+        holder.binding.checkView.setChecked(selectedSet.contains(data.photoPath), false)
     }
 
     class ViewHolder(val binding: LPpItemPhotoPickerBinding, imgWidth: Int) : RecyclerView.ViewHolder(binding.root) {

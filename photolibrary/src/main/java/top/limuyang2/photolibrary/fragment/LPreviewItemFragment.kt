@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.davemorrissey.labs.subscaleview.ImageSource
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
 import top.limuyang2.photolibrary.databinding.LPpFragmentPreviewItemBinding
+import top.limuyang2.photolibrary.util.dip
 
 
 /**
@@ -53,6 +54,8 @@ class LPreviewItemFragment : Fragment() {
         }
 
         viewBinding.photoView.maxScale = 5f
+        viewBinding.photoView.isZoomEnabled = true
+        viewBinding.photoView.setDoubleTapZoomScale(2f)
 
         uri?.let {
             viewBinding.photoView.setImage(ImageSource.uri(it))

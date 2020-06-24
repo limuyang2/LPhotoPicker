@@ -30,7 +30,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
     val cursor = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.BUCKET_ID),
+            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.MIME_TYPE, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.BUCKET_ID),
             selectionBuilder.toString(),
             typeArray,
             MediaStore.Images.Media.DATE_ADDED
@@ -40,25 +40,27 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
 
     try {
         if (cursor == null || cursor.count <= 0) {
-            return list.apply { add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1L, null, 0)) }
+            return list.apply { add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1L, null, 0, null)) }
         }
 
         var allCount = 0
 
         val tempFolderMap = HashMap<Long, LFolderModel>()
         var id = ""
+        var mimeType = ""
         while (cursor.moveToNext()) {
 
             id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
-            val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)) ?: "根目录"
+            val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+                    ?: "根目录"
             val bucketId = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-
+            mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
 
             val model = tempFolderMap[bucketId]
             if (model == null) {
                 val uri = getImageUri(id)
-                val newModel = LFolderModel(bucketName, bucketId, uri, 1)
+                val newModel = LFolderModel(bucketName, bucketId, uri, 1, LPPImageType.getImageType(mimeType))
                 tempFolderMap[bucketId] = newModel
             } else {
                 model.previewImgPath = getImageUri(id)
@@ -68,7 +70,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
             allCount++
         }
 
-        list.add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1, getImageUri(id), allCount))
+        list.add(LFolderModel(context.resources.getString(R.string.l_pp_all_image), -1, getImageUri(id), allCount, LPPImageType.getImageType(mimeType)))
         list.addAll(tempFolderMap.values)
 
     } catch (e: Throwable) {
@@ -101,7 +103,7 @@ internal fun Context.findPhoto(bucketId: Long, showType: Array<String>?, sortTyp
 
     val cursor = this.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME),
+            arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.MIME_TYPE),
             selectionBuilder.toString(),
             typeArray,
             "${MediaStore.Images.Media.DATE_ADDED} ${sortType.type}"
@@ -115,8 +117,12 @@ internal fun Context.findPhoto(bucketId: Long, showType: Array<String>?, sortTyp
             val id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
             val name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
+                    ?: ""
+            val mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
 
-            photoList.add(LPhotoModel(id, name, getImageUri(id)))
+            LPPImageType.getImageType(mimeType)?.let {
+                photoList.add(LPhotoModel(id, name, getImageUri(id), it))
+            }
         }
 
     } catch (e: Throwable) {
@@ -131,7 +137,7 @@ internal fun Context.findPhoto(bucketId: Long, showType: Array<String>?, sortTyp
 internal fun getImageUri(id: String): Uri? {
     return try {
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(id).build()
-    }catch (e:UnsupportedOperationException) {
+    } catch (e: UnsupportedOperationException) {
         null
     }
 }

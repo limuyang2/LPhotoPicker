@@ -4,13 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.databinding.LPpItemPhotoFolderBinding
 import top.limuyang2.photolibrary.model.LFolderModel
-import top.limuyang2.photolibrary.model.LPhotoModel
 import top.limuyang2.photolibrary.util.ImageEngineUtils
 import java.util.*
 
@@ -54,7 +51,7 @@ internal class LFolderAdapter : RecyclerView.Adapter<LFolderAdapter.ViewHolder>(
         holder.binding.folderName.text = data.bucketName
 
         val resize = holder.binding.folderPhotoIv.layoutParams.width
-        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, data.previewImgPath, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
+        ImageEngineUtils.engine.load(context, holder.binding.folderPhotoIv, data.previewImgPath, data.imageType, R.drawable.ic_l_pp_ic_holder_light, resize, resize)
 
     }
 

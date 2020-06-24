@@ -1,6 +1,8 @@
 package top.limuyang2.photolibrary.util
 
 import android.media.MediaFormat.MIMETYPE_IMAGE_ANDROID_HEIC
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.util.*
 
 /**
@@ -15,7 +17,7 @@ enum class LPPImageType {
         override fun getType(): Array<String> = arrayOf("image/png")
     },
 
-    WEBP{
+    WEBP {
         override fun getType(): Array<String> = arrayOf("image/webp")
     },
 
@@ -23,8 +25,9 @@ enum class LPPImageType {
         override fun getType(): Array<String> = arrayOf("image/gif")
     },
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     HEIF {
-        override fun getType(): Array<String> = arrayOf("image/heic")
+        override fun getType(): Array<String> = arrayOf("image/heic", MIMETYPE_IMAGE_ANDROID_HEIC)
     };
 
     abstract fun getType(): Array<String>
@@ -37,7 +40,9 @@ enum class LPPImageType {
             addAll(PNG.getType())
             addAll(WEBP.getType())
             addAll(GIF.getType())
-            addAll(HEIF.getType())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                addAll(HEIF.getType())
+            }
         }.toTypedArray()
 
         @JvmStatic
@@ -46,6 +51,17 @@ enum class LPPImageType {
                 addAll(t.getType())
             }
         }.toTypedArray()
+
+        fun getImageType(mimeType: String): LPPImageType? {
+            return when(mimeType) {
+                "image/jpeg", "image/jpg" -> JPEG
+                "image/png" -> PNG
+                "image/webp" -> WEBP
+                "image/gif" -> GIF
+                "image/heic", MIMETYPE_IMAGE_ANDROID_HEIC -> HEIF
+                else -> null
+            }
+        }
     }
 }
 

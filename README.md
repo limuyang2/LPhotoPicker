@@ -42,7 +42,7 @@ allprojects {
 ```gradle
 dependencies {
     // only support AndroidX
-	implementation 'com.github.limuyang2:LPhotoPicker:2.3'
+	implementation 'com.github.limuyang2:LPhotoPicker:2.5'
 }
 ```
 

@@ -23,7 +23,7 @@
 |![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark1.png)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark2.png)|![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/dark3.png)|
 
 ### demo下载地址
-[apk下载](https://wwa.lanzous.com/i32Qldzxs6f)  
+[apk下载](https://wwa.lanzous.com/idSn6e0bbta)  
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 

@@ -67,5 +67,3 @@ internal class LFolderAdapter : RecyclerView.Adapter<LFolderAdapter.ViewHolder>(
         this.onPhotoItemClick = onPhotoItemClick
     }
 }
-
-typealias OnFolderItemClick = (view: View, pos: Int) -> Unit

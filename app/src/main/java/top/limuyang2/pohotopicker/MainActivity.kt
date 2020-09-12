@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
@@ -114,9 +113,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun getPhoto(theme: Int = R.style.LPhotoTheme) {
         // android 10 必须添加 ACCESS_MEDIA_LOCATION 权限，否则无法加载 HEIF 格式图片
         val perArr = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION)
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION)
         } else {
-            arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE)
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         //验证权限
         if (EasyPermissions.hasPermissions(this, *perArr)) {
@@ -133,7 +132,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     .start(this, CHOOSE_PHOTO_REQUEST)
 
         } else {
-            EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n\n2.拍照", PER_REQUEST, *perArr)
+            EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n", PER_REQUEST, *perArr)
         }
     }
 

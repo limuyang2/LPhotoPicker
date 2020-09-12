@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import com.davemorrissey.labs.subscaleview.ImageSource
 import top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity
 import top.limuyang2.photolibrary.databinding.LPpFragmentPreviewItemBinding
-import top.limuyang2.photolibrary.util.dip
 
 
 /**
@@ -27,7 +26,7 @@ class LPreviewItemFragment : Fragment() {
     private var mLastShowHiddenTime = 0L
 
     private val uri by lazy(LazyThreadSafetyMode.NONE) {
-        arguments?.getParcelable<Uri>(URI_BUNDLE)
+        requireArguments().getParcelable<Uri>(URI_BUNDLE)
     }
 
     override fun onAttach(context: Context) {
@@ -64,11 +63,11 @@ class LPreviewItemFragment : Fragment() {
 
     companion object {
         fun buildFragment(uri: Uri): LPreviewItemFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(URI_BUNDLE, uri)
-            val fragment = LPreviewItemFragment()
-            fragment.arguments = bundle
-            return fragment
+            return LPreviewItemFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(URI_BUNDLE, uri)
+                }
+            }
         }
 
         private const val URI_BUNDLE = "PATH_BUNDLE"

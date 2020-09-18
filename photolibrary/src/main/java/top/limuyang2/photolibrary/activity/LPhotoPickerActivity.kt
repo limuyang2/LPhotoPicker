@@ -86,7 +86,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         viewBinding.photoPickerTitle.text = intent.getStringExtra("bucketName")
 
         initRecyclerView()
-        setBottomBtn()
+        updateBottomBtn()
 
         viewBinding.applyBtn.isEnabled = selectedPhotos != null && selectedPhotos.isNotEmpty()
     }
@@ -182,7 +182,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
                 finishWithSelectedPhotos(list)
             } else {
                 adapter.setChooseItem(uri, view.findViewById(R.id.checkView))
-                setBottomBtn()
+                updateBottomBtn()
             }
         }
 
@@ -201,7 +201,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
 
     @SuppressLint("SetTextI18n")
-    private fun setBottomBtn() {
+    private fun updateBottomBtn() {
         if (adapter.hasSelected()) {
             viewBinding.applyBtn.isEnabled = true
             viewBinding.applyBtn.text = "${getString(R.string.l_pp_apply)}(${adapter.getSelectedItemSize()}/$maxChooseCount)"
@@ -248,7 +248,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
                     Activity.RESULT_CANCELED -> {
                         data?.let {
                             adapter.setSelectedItemsPath(LPhotoHelper.getSelectedPhotos(it))
-                            setBottomBtn()
+                            updateBottomBtn()
                         }
                     }
                     Activity.RESULT_OK -> {

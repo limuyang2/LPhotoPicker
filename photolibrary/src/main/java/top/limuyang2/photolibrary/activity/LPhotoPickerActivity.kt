@@ -264,8 +264,6 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
     /**
      * recyclerView 滑动监听，滑动时暂停加载图片
-     * @property context Context
-     * @constructor
      */
     private class LPPOnScrollListener : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

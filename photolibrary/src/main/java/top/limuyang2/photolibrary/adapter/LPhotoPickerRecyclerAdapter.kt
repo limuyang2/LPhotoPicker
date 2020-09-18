@@ -23,7 +23,7 @@ import kotlin.math.ceil
  * @author limuyang
  */
 
-typealias OnPhotoItemClick = (view: View, uri: Uri, pos: Int) -> Unit
+internal typealias OnPhotoItemClick = (view: View, uri: Uri, pos: Int) -> Unit
 
 internal class PhotoPickerRecyclerAdapter(private val maxSelectNum: Int,
                                           private val imgWidth: Int) : RecyclerView.Adapter<PhotoPickerRecyclerAdapter.ViewHolder>() {

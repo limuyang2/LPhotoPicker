@@ -17,7 +17,7 @@ import top.limuyang2.photolibrary.databinding.LPpFragmentPreviewItemBinding
  * Date 2018/8/2
  * @author limuyang
  */
-class LPreviewItemFragment : Fragment() {
+internal class LPreviewItemFragment : Fragment() {
 
     private lateinit var mContext: Context
 

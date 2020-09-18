@@ -62,20 +62,6 @@ internal inline var Window.statusBarLightMode: Boolean
         return false
     }
 
-//internal fun setStatusBarColor(activity: Activity, @ColorInt color: Int) {
-//    try {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            val window = activity.window
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//            window.statusBarColor = color
-//
-//            //底部导航栏
-//            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
-//        }
-//    } catch (e: Exception) {
-//        e.printStackTrace()
-//    }
-//}
 
 /**
  * Add the top margin size equals status bar's height for view.
@@ -99,20 +85,11 @@ internal fun Activity.setStatusBarColor(@ColorInt color: Int, isMarginTop: Boole
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
 
     try {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//            window.statusBarColor = color
-//
-//        } else {
         transparentStatusBar()
         addStatusBarColor(color, isMarginTop, isDecor)
-//        }
     } catch (e: Exception) {
         e.printStackTrace()
     }
-
-//    transparentStatusBar()
-//    addStatusBarColor(color, isMarginTop, isDecor)
 }
 
 private fun Activity.addStatusBarColor(@ColorInt color: Int, isMarginTop: Boolean = true, isDecor: Boolean = false): View {

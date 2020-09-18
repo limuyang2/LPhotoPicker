@@ -14,6 +14,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.StyleRes
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -43,7 +44,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.l_pp_photo_preview_bg)))
+        window.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.l_pp_photo_preview_bg)))
         initAttr()
         setStatusBar()
         viewBinding.checkBox.setChecked(checked = true, animate = false)

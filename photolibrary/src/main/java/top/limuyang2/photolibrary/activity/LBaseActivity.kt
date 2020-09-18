@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME

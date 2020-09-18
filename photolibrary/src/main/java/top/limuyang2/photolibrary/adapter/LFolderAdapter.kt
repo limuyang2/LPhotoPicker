@@ -15,6 +15,7 @@ import java.util.*
  *
  * Date 2018/8/1
  * @author limuyang
+ *
  * popWindow适配器
  */
 internal class LFolderAdapter : RecyclerView.Adapter<LFolderAdapter.ViewHolder>() {

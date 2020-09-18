@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         private const val PER_REQUEST = 100
         private const val CHOOSE_PHOTO_REQUEST = 10
 
-        private const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        private const val READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
     private lateinit var viewBinding: ActivityMainBinding

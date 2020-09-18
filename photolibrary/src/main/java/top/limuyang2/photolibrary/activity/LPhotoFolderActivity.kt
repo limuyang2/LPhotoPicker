@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaFormat.MIMETYPE_IMAGE_ANDROID_HEIC
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,13 +66,13 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.colorPrimaryDark))
+        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, ContextCompat.getColor(this, R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
 
 
         viewBinding.apply {
             // 背景色
-            val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, resources.getColor(R.color.l_pp_activity_bg))
+            val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, ContextCompat.getColor(this@LPhotoFolderActivity, R.color.l_pp_activity_bg))
             window.setBackgroundDrawable(ColorDrawable(activityBg))
 
             val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
@@ -82,7 +82,7 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
 
             // 导航栏背景
             val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
-            val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.colorPrimary))
+            val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, ContextCompat.getColor(this@LPhotoFolderActivity, R.color.colorPrimary))
             if (toolBarBackgroundRes != 0) {
                 toolBar.setBackgroundResource(toolBarBackgroundRes)
             } else {

@@ -140,6 +140,7 @@ class LGlideEngine : LImageEngine {
 	<item name="l_pp_toolBar_background">@color/colorPrimary</item><!--toolBar颜色-->
 	<item name="l_pp_picker_activity_bg">#F9F9F9</item><!--activity背景颜色-->
 	<item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
+	<item name="l_pp_status_bar_lightMode">false</item><!--状态栏高亮模式-->
 	<item name="l_pp_picker_bottomBar_background">#96ffffff</item><!--底栏的颜色，如果需要毛玻璃效果，颜色加上透明度-->
 	<item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item><!--底部按钮启用时的颜色-->
 	<item name="l_pp_picker_bottomBar_disabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->

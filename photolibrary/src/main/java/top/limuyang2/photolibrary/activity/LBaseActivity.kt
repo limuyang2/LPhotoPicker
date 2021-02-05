@@ -1,6 +1,7 @@
 package top.limuyang2.photolibrary.activity
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
@@ -44,8 +45,15 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
                 it.refreshRate
             }
 
-            val filterModes = modes.filter {
-                it.refreshRate <= 90f && it.physicalWidth == nowPoint.x && it.physicalHeight == nowPoint.y
+            // 只找90Hz的
+            val filterModes = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                modes.filter { m ->
+                    m.refreshRate == 90f && m.physicalWidth == nowPoint.x && m.physicalHeight == nowPoint.y
+                }
+            } else {
+                modes.filter { m ->
+                    m.refreshRate == 90f && m.physicalWidth == nowPoint.y && m.physicalHeight == nowPoint.x
+                }
             }
 
             filterModes.lastOrNull()?.let {

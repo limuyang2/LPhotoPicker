@@ -9,6 +9,7 @@
 
         <attr name="l_pp_toolBar_background" format="reference|color" />
         <attr name="l_pp_status_bar_color" format="color" />
+        <attr name="l_pp_status_bar_lightMode" format="boolean" />
         <attr name="l_pp_picker_activity_bg" format="color" />
 
         <attr name="l_pp_picker_bottomBar_background" format="color"/>

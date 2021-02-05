@@ -53,7 +53,7 @@ internal fun findFolder(context: Context, showType: Array<String>?): List<LFolde
             id = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
             val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-                    ?: "根目录"
+                    ?: context.resources.getString(R.string.l_pp_root_directory)
             val bucketId = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
             mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
 

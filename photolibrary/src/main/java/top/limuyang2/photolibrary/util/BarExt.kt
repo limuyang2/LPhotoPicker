@@ -16,7 +16,6 @@ import androidx.annotation.ColorInt
  * @description:
  */
 private const val TAG_STATUS_BAR = "TAG_STATUS_BAR"
-private const val KEY_OFFSET = -123
 
 /**
  * 获取状态栏的高度
@@ -31,15 +30,6 @@ inline val Context.statusBarHeight: Int
         }
     }
 
-/**
- * Set the status bar's light mode.
- *
- */
-internal inline var Activity.statusBarLightMode: Boolean
-    set(value) {
-        window.statusBarLightMode = value
-    }
-    get() = window.statusBarLightMode
 
 internal inline var Window.statusBarLightMode: Boolean
     set(value) {
@@ -61,25 +51,6 @@ internal inline var Window.statusBarLightMode: Boolean
         }
         return false
     }
-
-
-/**
- * Add the top margin size equals status bar's height for view.
- *
- */
-internal fun View.addMarginTopEqualStatusBarHeight() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-    val haveSetOffset = getTag(KEY_OFFSET)
-    if (haveSetOffset != null && haveSetOffset is Boolean) return
-    val layoutParams = layoutParams as ViewGroup.MarginLayoutParams
-    layoutParams.setMargins(
-            layoutParams.leftMargin,
-            layoutParams.topMargin + context.statusBarHeight,
-            layoutParams.rightMargin,
-            layoutParams.bottomMargin
-    )
-    setTag(KEY_OFFSET, true)
-}
 
 internal fun Activity.setStatusBarColor(@ColorInt color: Int, isMarginTop: Boolean = true, isDecor: Boolean = false) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return

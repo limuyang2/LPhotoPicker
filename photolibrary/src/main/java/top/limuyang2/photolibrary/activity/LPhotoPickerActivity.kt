@@ -102,6 +102,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
+        window.statusBarLightMode = typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
         val l = viewBinding.toolBar.layoutParams

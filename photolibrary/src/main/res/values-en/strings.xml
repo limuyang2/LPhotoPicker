@@ -6,4 +6,5 @@
     <string name="l_pp_preview">Preview</string>
     <string name="l_pp_apply">Use</string>
     <string name="l_pp_view_photo">View image</string>
+    <string name="l_pp_root_directory">Root directory</string>
 </resources>

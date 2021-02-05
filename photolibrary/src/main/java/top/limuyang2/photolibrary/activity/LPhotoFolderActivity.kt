@@ -22,6 +22,7 @@ import top.limuyang2.photolibrary.model.LFolderModel
 import top.limuyang2.photolibrary.util.dip
 import top.limuyang2.photolibrary.util.findFolder
 import top.limuyang2.photolibrary.util.setStatusBarColor
+import top.limuyang2.photolibrary.util.statusBarLightMode
 
 /**
  * @author 李沐阳
@@ -68,7 +69,7 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, ContextCompat.getColor(this, R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
-
+        window.statusBarLightMode = typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
 
         viewBinding.apply {
             // 背景色

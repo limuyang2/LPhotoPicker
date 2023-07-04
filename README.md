@@ -42,19 +42,19 @@ allprojects {
 ```gradle
 dependencies {
     // only support AndroidX
-	implementation 'com.github.limuyang2:LPhotoPicker:2.6'
+	implementation 'com.github.limuyang2:LPhotoPicker:2.7'
 }
 ```
 
 在build.gradle中添加以下配置：  
 ```gradle
 android {
-    compileSdkVersion 29
+    compileSdkVersion 33
     defaultConfig {
         ………………
 
         //添加以下两句代码
-        renderscriptTargetApi 29  //版本号请与compileSdkVersion保持一致
+        renderscriptTargetApi 33  //版本号请与compileSdkVersion保持一致
         renderscriptSupportModeEnabled true
 
     }

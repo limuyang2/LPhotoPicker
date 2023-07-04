@@ -19,7 +19,7 @@ import kotlin.math.sqrt
  *
  */
 
-class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr), Checkable {
+internal class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr), Checkable {
 
     private lateinit var mTickPaint: Paint
     private lateinit var mFloorPaint: Paint
@@ -74,7 +74,7 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
 
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val bundle = Bundle()
         bundle.putParcelable(KEY_INSTANCE_STATE, super.onSaveInstanceState())
         bundle.putBoolean(KEY_INSTANCE_STATE, isChecked)
@@ -135,13 +135,13 @@ class LPPSmoothCheckBox @JvmOverloads constructor(context: Context, attrs: Attri
 
     private fun measureSize(measureSpec: Int): Int {
         val defSize = dp2px(context, DEF_DRAW_SIZE.toFloat())
-        val specSize = View.MeasureSpec.getSize(measureSpec)
-        val specMode = View.MeasureSpec.getMode(measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
+        val specMode = MeasureSpec.getMode(measureSpec)
 
         var result = 0
         when (specMode) {
-            View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.AT_MOST -> result = defSize.coerceAtMost(specSize)
-            View.MeasureSpec.EXACTLY -> result = specSize
+            MeasureSpec.UNSPECIFIED, MeasureSpec.AT_MOST -> result = defSize.coerceAtMost(specSize)
+            MeasureSpec.EXACTLY -> result = specSize
         }
         return result
     }

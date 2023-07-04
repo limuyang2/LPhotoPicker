@@ -1,8 +1,6 @@
 package top.limuyang2.photolibrary.activity
 
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -32,34 +30,35 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(intentTheme)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val display = window.windowManager.defaultDisplay
-
-            val nowPoint = Point()
-            display.getRealSize(nowPoint)
-
-            val modes = display.supportedModes
-
-            modes.sortBy {
-                it.refreshRate
-            }
-
-            // 只找90Hz的
-            val filterModes = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                modes.filter { m ->
-                    m.refreshRate == 90f && m.physicalWidth == nowPoint.x && m.physicalHeight == nowPoint.y
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                this.display
             } else {
-                modes.filter { m ->
-                    m.refreshRate == 90f && m.physicalWidth == nowPoint.y && m.physicalHeight == nowPoint.x
-                }
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay
             }
 
-            filterModes.lastOrNull()?.let {
-                val lp = window.attributes
-                lp.preferredDisplayModeId = it.modeId
-                window.attributes = lp
+            if (display != null) {
+                val mode = display.mode
+                val currentWidth = mode.physicalWidth
+                val currentHeight = mode.physicalHeight
+
+                val modes = display.supportedModes
+
+                modes.sortBy { m ->
+                    m.refreshRate
+                }
+
+                // 只找90Hz的
+                val filterModes = modes.filter { m ->
+                    m.refreshRate == 90f && m.physicalWidth == currentWidth && m.physicalHeight == currentHeight
+                }
+
+                filterModes.lastOrNull()?.let { m ->
+                    val lp = window.attributes
+                    lp.preferredDisplayModeId = m.modeId
+                    window.attributes = lp
+                }
             }
         }
 

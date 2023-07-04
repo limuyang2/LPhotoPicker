@@ -158,7 +158,7 @@ class LGlideEngine : LImageEngine {
 ```
 
 ### 动态设置主题，需要多种风格切换的(例如主题切换的情况)
-同上先在xm中定义属性，但```style```名字可以随意：
+同上先在xml中定义属性，但```style```名字可以随意：
 ```xml
 <style name="MyDarkTheme" parent="LPPBaseTheme">
 	……

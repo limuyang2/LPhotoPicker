@@ -8,26 +8,42 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
-import pub.devrel.easypermissions.AppSettingsDialog
-import pub.devrel.easypermissions.EasyPermissions
 import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.util.LPPImageType
 import top.limuyang2.pohotopicker.databinding.ActivityMainBinding
 import java.io.File
 
 
-class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val PER_REQUEST = 100
         private const val CHOOSE_PHOTO_REQUEST = 10
 
+    }
+
+    private val permissionLaunch = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+        var isAllOk = true
+
+        for ((k,v) in map) {
+            if (!v) {
+                isAllOk = false
+                println("------------->>> no per: ${k}")
+            }
+        }
+
+        if (isAllOk) {
+            getPhoto()
+        } else {
+            Toast.makeText(this, "图片选择需要以下权限:1.访问设备上的照片", Toast.LENGTH_LONG).show()
+        }
     }
 
     private lateinit var viewBinding: ActivityMainBinding
@@ -36,7 +52,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-        LPPImageType.HEIF
+
         viewBinding.toolBar.title = getString(R.string.app_name)
 
         // 获取系统当前是否是暗色模式
@@ -89,34 +105,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         viewBinding.darkThemeBtn.setOnClickListener { getPhoto(R.style.BlackTheme) }
     }
 
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        if (requestCode == PER_REQUEST) {
-            if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-                AppSettingsDialog.Builder(this).build().show()
-            }
-        }
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        if (requestCode == PER_REQUEST) {
-            getPhoto()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
 
     private fun getPhoto(theme: Int = R.style.LPhotoTheme) {
         // android 10 必须添加 ACCESS_MEDIA_LOCATION 权限，否则无法加载 HEIF 格式图片
-        val perArr = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val perArr = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.ACCESS_MEDIA_LOCATION)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION)
         } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, )
         }
         //验证权限
-        if (EasyPermissions.hasPermissions(this, *perArr)) {
+        if (hasPermissions(this, *perArr)) {
 
             LPhotoHelper.Builder()
                     .maxChooseCount(viewBinding.multiMumTv.text.toString().toInt())
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     .start(this, CHOOSE_PHOTO_REQUEST)
 
         } else {
-            EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n", PER_REQUEST, *perArr)
+            permissionLaunch.launch(perArr)
         }
     }
 

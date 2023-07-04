@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
@@ -21,6 +22,7 @@ import top.limuyang2.photolibrary.databinding.LPpActivityFolderBinding
 import top.limuyang2.photolibrary.model.LFolderModel
 import top.limuyang2.photolibrary.util.dip
 import top.limuyang2.photolibrary.util.findFolder
+import top.limuyang2.photolibrary.util.navigationBarColor
 import top.limuyang2.photolibrary.util.setStatusBarColor
 import top.limuyang2.photolibrary.util.statusBarLightMode
 
@@ -75,6 +77,9 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
             // 背景色
             val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, ContextCompat.getColor(this@LPhotoFolderActivity, R.color.l_pp_activity_bg))
             window.setBackgroundDrawable(ColorDrawable(activityBg))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                navigationBarColor = activityBg
+            }
 
             val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
             val l = toolBar.layoutParams

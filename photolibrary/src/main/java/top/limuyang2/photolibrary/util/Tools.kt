@@ -1,14 +1,10 @@
 package top.limuyang2.photolibrary.util
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Point
 import android.os.Build
-import android.provider.MediaStore
 import android.view.WindowManager
-import top.limuyang2.photolibrary.R
-import top.limuyang2.photolibrary.model.LFolderModel
-import top.limuyang2.photolibrary.model.LPhotoModel
-import java.io.File
 
 
 /**
@@ -28,16 +24,14 @@ internal fun Context.dip(dpValue: Int): Float {
  *
  * @return the width of screen, in pixel
  */
-internal fun getScreenWidth(context: Context): Int {
-    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-            ?: return context.resources.displayMetrics.widthPixels
-    val point = Point()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        wm.defaultDisplay.getRealSize(point)
+internal fun Activity.getScreenWidth(): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        windowManager.currentWindowMetrics.bounds.width()
     } else {
-        wm.defaultDisplay.getSize(point)
+        val point = Point()
+        windowManager.defaultDisplay.getRealSize(point)
+        point.x
     }
-    return point.x
 }
 
 

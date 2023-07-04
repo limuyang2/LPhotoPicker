@@ -12,30 +12,31 @@ import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowInsets
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.StyleRes
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.viewpager.widget.ViewPager
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_SELECTED_PHOTOS
-import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME
 import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPreviewPagerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerPreviewBinding
 import top.limuyang2.photolibrary.util.click
 import top.limuyang2.photolibrary.util.dip
+import top.limuyang2.photolibrary.util.navigationBarColor
 import top.limuyang2.photolibrary.util.statusBarHeight
-import top.limuyang2.photolibrary.util.transparentStatusBar
 
 @SuppressLint("SetTextI18n")
 class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewBinding>() {
 
     private val nowSelectedPhotos = ArrayList<Uri>()
 
-    private val intentSelectedPhotos by lazy { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
+    private val intentSelectedPhotos by lazy(LazyThreadSafetyMode.NONE) { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS)!! }
 
-    private val viewPageAdapter by lazy { LPreviewPagerAdapter(supportFragmentManager, intentSelectedPhotos) }
+    private val viewPageAdapter by lazy(LazyThreadSafetyMode.NONE) { LPreviewPagerAdapter(supportFragmentManager, intentSelectedPhotos) }
 
     private var currentUri: Uri? = null
 
@@ -47,6 +48,7 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
         window.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.l_pp_photo_preview_bg)))
         initAttr()
         setStatusBar()
+
         viewBinding.checkBox.setChecked(checked = true, animate = false)
         viewBinding.previewTitleTv.text = "1/${intentSelectedPhotos.size}"
         viewBinding.viewPage.adapter = viewPageAdapter
@@ -54,7 +56,17 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
 
 
     override fun initListener() {
-        viewBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                isEnabled = false
+                val intent = Intent()
+                intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
+                setResult(Activity.RESULT_CANCELED, intent)
+                onBackPressedDispatcher.onBackPressed()
+            }
+        })
+
+        viewBinding.toolBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         viewBinding.viewPage.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -123,23 +135,24 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
     }
 
     private fun setStatusBar() {
-        //5.0以上去除半透明遮罩，全透明
-        transparentStatusBar()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window?.setDecorFitsSystemWindows(false)
+            val navigationBarH = windowManager.currentWindowMetrics.windowInsets.getInsets(WindowInsets.Type.navigationBars()).bottom
+            val lp = viewBinding.bottomLayout.layoutParams as MarginLayoutParams
+            lp.bottomMargin = navigationBarH
+            viewBinding.bottomLayout.layoutParams = lp
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = Color.TRANSPARENT
+            navigationBarColor = Color.BLACK
+        }
 
         //获取状态栏高度,设置顶部layout高度
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val allHeight = statusBarHeight + viewBinding.toolBar.layoutParams.height
-            val newLayout = viewBinding.topBlurView.layoutParams
-            newLayout.height = allHeight
-            viewBinding.topBlurView.requestLayout()
-        }
-    }
-
-    override fun onBackPressed() {
-        val intent = Intent()
-        intent.putParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS, nowSelectedPhotos)
-        setResult(Activity.RESULT_CANCELED, intent)
-        super.onBackPressed()
+        val allHeight = statusBarHeight + viewBinding.toolBar.layoutParams.height
+        val newLayout = viewBinding.topBlurView.layoutParams
+        newLayout.height = allHeight
+        viewBinding.topBlurView.layoutParams = newLayout
     }
 
     private var mIsHidden = false
@@ -196,20 +209,12 @@ class LPhotoPickerPreviewActivity : LBaseActivity<LPpActivityPhotoPickerPreviewB
             return this
         }
 
-        /**
-         * 设置主题
-         */
-        fun theme(@StyleRes style: Int): IntentBuilder {
-            mIntent.putExtra(EXTRA_THEME, style)
-            return this
-        }
-
         fun build(): Intent {
             return mIntent
         }
     }
 
     companion object {
-        private const val DURATION_TIME = 600L
+        private const val DURATION_TIME = 500L
     }
 }

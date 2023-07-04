@@ -125,7 +125,7 @@ internal fun Context.findPhoto(bucketId: Long, showType: Array<String>?, sortTyp
             }
         }
 
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
     } finally {
         cursor?.close()
     }

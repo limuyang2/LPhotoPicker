@@ -1,7 +1,7 @@
 <resources>
     <string name="l_pp_picture">图片</string>
     <string name="l_pp_toast_photo_picker_max">最多只能选择 %1$d 张图片</string>
-    <string name="l_pp_all_image">所有图片</string>
+    <string name="l_pp_all_image">全部图片</string>
     <string name="l_pp_preview">预览</string>
     <string name="l_pp_apply">使用</string>
     <string name="l_pp_view_photo">查看图片</string>

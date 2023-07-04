@@ -7,9 +7,13 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,38 +40,34 @@ import top.limuyang2.photolibrary.util.*
  * @author limuyang
  */
 
-@Suppress("DEPRECATION")
 class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
 
-    companion object {
-        /**
-         * 预览照片的请求码
-         */
-        private const val RC_PREVIEW_CODE = 2
+    private val previewLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it == null) return@registerForActivityResult
+        onPreviewActivityResult(it)
     }
-
 
 //    // 获取拍照图片保存目录
 //    private val cameraFileDir by lazy { intent.getSerializableExtra(EXTRA_CAMERA_FILE_DIR) as File }
 
     // 获取图片选择的最大张数
-    private val maxChooseCount by lazy { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
+    private val maxChooseCount by lazy(LazyThreadSafetyMode.NONE) { intent.getIntExtra(EXTRA_MAX_CHOOSE_COUNT, 1) }
 
     //外部传进来的已选中的图片路径集合
-    private val selectedPhotos by lazy { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
+    private val selectedPhotos by lazy(LazyThreadSafetyMode.NONE) { intent.getParcelableArrayListExtra<Uri>(EXTRA_SELECTED_PHOTOS) }
 
-    private val isSingleChoose by lazy { intent.getBooleanExtra(EXTRA_IS_SINGLE_CHOOSE, false) }
+    private val isSingleChoose by lazy(LazyThreadSafetyMode.NONE) { intent.getBooleanExtra(EXTRA_IS_SINGLE_CHOOSE, false) }
 
     //列数
-    private val columnsNumber by lazy { intent.getIntExtra(EXTRA_COLUMNS_NUMBER, 3) }
+    private val columnsNumber by lazy(LazyThreadSafetyMode.NONE) { intent.getIntExtra(EXTRA_COLUMNS_NUMBER, 3) }
 
-    private val showTypeArray by lazy { intent.getStringArrayExtra(EXTRA_TYPE) }
+    private val showTypeArray by lazy(LazyThreadSafetyMode.NONE) { intent.getStringArrayExtra(EXTRA_TYPE) }
 
     // item图片之间间隔
     private var picSpacing: Int = 0
 
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
-        val width = getScreenWidth(this)
+        val width = getScreenWidth()
         val imgWidth = ((width - picSpacing * (columnsNumber + 1).toFloat()) / columnsNumber.toFloat()).toInt()
 
         PhotoPickerRecyclerAdapter(maxChooseCount, imgWidth).apply {
@@ -88,7 +88,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         initRecyclerView()
         updateBottomBtn()
 
-        viewBinding.applyBtn.isEnabled = selectedPhotos != null && selectedPhotos.isNotEmpty()
+        viewBinding.applyBtn.isEnabled = !selectedPhotos.isNullOrEmpty()
     }
 
     /**
@@ -97,10 +97,10 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, resources.getColor(R.color.l_pp_activity_bg))
+        val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, ContextCompat.getColor(this, R.color.l_pp_activity_bg))
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
-        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, resources.getColor(R.color.colorPrimaryDark))
+        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, ContextCompat.getColor(this, R.color.colorPrimaryDark))
         setStatusBarColor(statusBarColor)
         window.statusBarLightMode = typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
 
@@ -113,7 +113,7 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         viewBinding.toolBar.setNavigationIcon(backIcon)
 
         val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
-        val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, resources.getColor(R.color.colorPrimary))
+        val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, ContextCompat.getColor(this, R.color.colorPrimary))
 
         if (toolBarBackgroundRes != 0) {
             viewBinding.toolBar.setBackgroundResource(toolBarBackgroundRes)
@@ -121,15 +121,18 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
             viewBinding.toolBar.setBackgroundColor(toolBarBackgroundColor)
         }
 
-        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, resources.getColor(R.color.l_pp_bottomBar_bg))
+        val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, ContextCompat.getColor(this, R.color.l_pp_bottomBar_bg))
         viewBinding.topBlurView.setOverlayColor(bottomBarBgColor)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            navigationBarColor = bottomBarBgColor
+        }
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dip(50).toInt())
         val newBl = viewBinding.bottomLayout.layoutParams
         newBl.height = bottomBarHeight
         viewBinding.bottomLayout.requestLayout()
 
-        val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, resources.getColor(R.color.l_pp_bottomBar_enabled_text_color))
+        val bottomBarEnableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_enabled_text_color, ContextCompat.getColor(this, R.color.l_pp_bottomBar_enabled_text_color))
         val bottomBarDisableTextColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_disabled_text_color, Color.GRAY)
         val colors = intArrayOf(bottomBarEnableTextColor, bottomBarDisableTextColor)
         val states = arrayOfNulls<IntArray>(2)
@@ -238,26 +241,22 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         val intent = LPhotoPickerPreviewActivity.IntentBuilder(this)
                 .selectedPhotos(adapter.getSelectedItems())
                 .build()
-        startActivityForResult(intent, RC_PREVIEW_CODE)
+        previewLaunch.launch(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RC_PREVIEW_CODE -> {
-                when (resultCode) {
-                    Activity.RESULT_CANCELED -> {
-                        data?.let {
-                            adapter.setSelectedItemsPath(LPhotoHelper.getSelectedPhotos(it))
-                            updateBottomBtn()
-                        }
-                    }
-                    Activity.RESULT_OK -> {
-                        data?.let {
-                            setResult(Activity.RESULT_OK, it)
-                            finish()
-                        }
-                    }
+    private fun onPreviewActivityResult(activityResult: ActivityResult) {
+        when (activityResult.resultCode) {
+            Activity.RESULT_CANCELED -> {
+                activityResult.data?.let {
+                    adapter.setSelectedItemsPath(LPhotoHelper.getSelectedPhotos(it))
+                    updateBottomBtn()
+                }
+            }
+
+            Activity.RESULT_OK -> {
+                activityResult.data?.let {
+                    setResult(Activity.RESULT_OK, it)
+                    finish()
                 }
             }
         }

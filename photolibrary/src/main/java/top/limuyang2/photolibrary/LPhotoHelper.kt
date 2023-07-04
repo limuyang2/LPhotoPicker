@@ -33,14 +33,14 @@ class LPhotoHelper internal constructor(private val intent: Intent) {
          * @return
          */
         @JvmStatic
-        fun getSelectedPhotos(intent: Intent?): ArrayList<Uri> {
-            return intent?.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: ArrayList()
+        fun getSelectedPhotos(intent: Intent?): List<Uri> {
+            return intent?.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS) ?: emptyList()
         }
     }
 
 
     fun start(fragment: Fragment, requestCode: Int) {
-        intent.component = ComponentName(fragment.context!!, LPhotoFolderActivity::class.java)
+        intent.component = ComponentName(fragment.requireContext(), LPhotoFolderActivity::class.java)
         fragment.startActivityForResult(intent, requestCode)
     }
 

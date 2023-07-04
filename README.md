@@ -62,7 +62,7 @@ android {
 ```
 
 ## 使用
-> 使用前，记得获取权限！‘Manifest.permission.WRITE_EXTERNAL_STORAGE‘’，因为大家各自项目中使用的权限框架各不相同，库中再集成的话会显得非常臃肿多余。  
+> 使用前，记得获取权限！‘Manifest.permission.READ_EXTERNAL_STORAGE‘’，因为大家各自项目中使用的权限框架各不相同，库中再集成的话会显得非常臃肿多余。  
 
 > 以下均以kotlin为示例，java的写法基本无差别，不在单独列出  
 

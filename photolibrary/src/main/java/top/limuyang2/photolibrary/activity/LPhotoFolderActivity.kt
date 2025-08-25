@@ -6,10 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +27,6 @@ import top.limuyang2.photolibrary.model.LFolderModel
 import top.limuyang2.photolibrary.util.dip
 import top.limuyang2.photolibrary.util.findFolder
 import top.limuyang2.photolibrary.util.navigationBarColor
-import top.limuyang2.photolibrary.util.setStatusBarColor
 import top.limuyang2.photolibrary.util.statusBarLightMode
 
 /**
@@ -35,15 +38,36 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
 
     private val mFolderAdapter: LFolderAdapter by lazy(LazyThreadSafetyMode.NONE) { LFolderAdapter() }
 
-    private val showTypeArray by lazy(LazyThreadSafetyMode.NONE) { intent.getStringArrayExtra(EXTRA_TYPE) }
+    private val showTypeArray by lazy(LazyThreadSafetyMode.NONE) {
+        intent.getStringArrayExtra(
+            EXTRA_TYPE
+        )
+    }
 
-    private val isOpenLastAlbum by lazy(LazyThreadSafetyMode.NONE) { intent.getBooleanExtra(EXTRA_LAST_OPENED_ALBUM, false) }
+    private val isOpenLastAlbum by lazy(LazyThreadSafetyMode.NONE) {
+        intent.getBooleanExtra(
+            EXTRA_LAST_OPENED_ALBUM,
+            false
+        )
+    }
 
     override fun initBinding(): LPpActivityFolderBinding {
         return LPpActivityFolderBinding.inflate(layoutInflater)
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.root) {v,insets ->
+            val bar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            viewBinding.fakeBar.updateLayoutParams {
+                height = bar.top
+            }
+
+            viewBinding.recyclerView.updatePadding(bottom = bar.bottom)
+
+            insets
+        }
+
         // 判断是否需要打开最后记录的相册
         if (isOpenLastAlbum) {
             val lastModel = lastOpenAlbum
@@ -69,39 +93,58 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
     private fun initAttr() {
         val typedArray = theme.obtainStyledAttributes(R.styleable.LPPAttr)
 
-        val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, ContextCompat.getColor(this, R.color.colorPrimaryDark))
-        setStatusBarColor(statusBarColor)
-        window.statusBarLightMode = typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
+        window.statusBarLightMode =
+            typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
 
         viewBinding.apply {
             // 背景色
-            val activityBg = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_activity_bg, ContextCompat.getColor(this@LPhotoFolderActivity, R.color.l_pp_activity_bg))
+            val activityBg = typedArray.getColor(
+                R.styleable.LPPAttr_l_pp_picker_activity_bg,
+                ContextCompat.getColor(this@LPhotoFolderActivity, R.color.l_pp_activity_bg)
+            )
             window.setBackgroundDrawable(ColorDrawable(activityBg))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                navigationBarColor = activityBg
+            navigationBarColor = activityBg
+
+            val statusBarColor = typedArray.getColor(
+                R.styleable.LPPAttr_l_pp_status_bar_color,
+                ContextCompat.getColor(this@LPhotoFolderActivity, R.color.colorPrimaryDark)
+            )
+            fakeBar.setBackgroundColor(statusBarColor)
+
+            // 标题栏高度
+            val toolBarHeight = typedArray.getDimensionPixelSize(
+                R.styleable.LPPAttr_l_pp_toolBar_height,
+                dip(56).toInt()
+            )
+            toolBar.updateLayoutParams {
+                height = toolBarHeight
             }
 
-            val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
-            val l = toolBar.layoutParams
-            l.height = toolBarHeight
-            toolBar.requestLayout()
-
-            // 导航栏背景
-            val toolBarBackgroundRes = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
-            val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, ContextCompat.getColor(this@LPhotoFolderActivity, R.color.colorPrimary))
+            // 标题栏背景
+            val toolBarBackgroundRes =
+                typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_background, 0)
+            val toolBarBackgroundColor = typedArray.getColor(
+                R.styleable.LPPAttr_l_pp_toolBar_background,
+                ContextCompat.getColor(this@LPhotoFolderActivity, R.color.colorPrimary)
+            )
             if (toolBarBackgroundRes != 0) {
-                toolBar.setBackgroundResource(toolBarBackgroundRes)
+                barLl.setBackgroundResource(toolBarBackgroundRes)
             } else {
-                toolBar.setBackgroundColor(toolBarBackgroundColor)
+                barLl.setBackgroundColor(toolBarBackgroundColor)
             }
 
             // 返回按钮
-            val backIcon = typedArray.getResourceId(R.styleable.LPPAttr_l_pp_toolBar_backIcon, R.drawable.ic_l_pp_back_android)
+            val backIcon = typedArray.getResourceId(
+                R.styleable.LPPAttr_l_pp_toolBar_backIcon,
+                R.drawable.ic_l_pp_back_android
+            )
             toolBar.setNavigationIcon(backIcon)
 
-            // 标题颜色字体
-            val titleColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
-            val titleSize = typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dip(16))
+            // 标题颜色和字体
+            val titleColor =
+                typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_title_color, Color.WHITE)
+            val titleSize =
+                typedArray.getDimension(R.styleable.LPPAttr_l_pp_toolBar_title_size, dip(16))
             viewBinding.toolBarTitle.setTextColor(titleColor)
             viewBinding.toolBarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
         }
@@ -137,7 +180,8 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
     }
 
     private fun openAlbum(model: LFolderModel) {
-        intent.component = ComponentName(this@LPhotoFolderActivity, LPhotoPickerActivity::class.java)
+        intent.component =
+            ComponentName(this@LPhotoFolderActivity, LPhotoPickerActivity::class.java)
         intent.putExtra("bucketId", model.bucketId)
         intent.putExtra("bucketName", model.bucketName)
         startActivityForResult(intent, PICK_CODE)
@@ -147,9 +191,10 @@ class LPhotoFolderActivity : LBaseActivity<LPpActivityFolderBinding>() {
     private var lastOpenAlbum: LFolderModel
         set(value) {
             val sp = getSharedPreferences("l_pp_sp", Context.MODE_PRIVATE)
-            sp.edit().putLong(SP_LAST_BUCKET_ID, value.bucketId)
+            sp.edit {
+                putLong(SP_LAST_BUCKET_ID, value.bucketId)
                     .putString(SP_LAST_BUCKET_NAME, value.bucketName)
-                    .apply()
+            }
         }
         get() {
             val sp = getSharedPreferences("l_pp_sp", Context.MODE_PRIVATE)

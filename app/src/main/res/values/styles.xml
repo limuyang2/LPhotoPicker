@@ -12,7 +12,7 @@
     <!--主题2-->
     <style name="LPhotoTheme2" parent="LPPBaseTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->
-        <item name="l_pp_toolBar_height">56dp</item>
+        <item name="l_pp_toolBar_height">48dp</item>
         <item name="l_pp_toolBar_backIcon">@drawable/ic_l_pp_back_android</item><!--返回按钮资源-->
         <item name="l_pp_toolBar_title_size">16sp</item><!--toolBar上字体大小-->
         <item name="l_pp_bottomBar_height">50dp</item><!--底栏的高度-->
@@ -41,7 +41,7 @@
     <!--黑色主题-->
     <style name="BlackTheme" parent="LPPBaseTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->
-        <item name="l_pp_toolBar_height">56dp</item>
+        <item name="l_pp_toolBar_height">48dp</item>
         <item name="l_pp_toolBar_backIcon">@drawable/ic_l_pp_back_android</item><!--返回按钮资源-->
         <item name="l_pp_toolBar_title_size">16sp</item><!--toolBar上字体大小-->
         <item name="l_pp_bottomBar_height">50dp</item><!--底栏的高度-->

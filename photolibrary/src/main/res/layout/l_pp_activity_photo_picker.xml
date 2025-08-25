@@ -10,30 +10,42 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBar"
+        <LinearLayout
+            android:id="@+id/bar_ll"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/l_pp_toolBar_height"
-            android:elevation="4dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <View
+                android:id="@+id/fake_bar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp" />
 
-            <TextView
-                android:id="@+id/photoPickerTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:singleLine="true"
-                tools:text="全部" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/l_pp_toolBar_height"
+                android:background="@android:color/transparent"
+                android:elevation="4dp"
+                tools:background="#626262">
 
+                <TextView
+                    android:id="@+id/photoPickerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:singleLine="true"
+                    tools:text="全部" />
 
-        </androidx.appcompat.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pickerRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
+            android:clipToPadding="false"
             android:overScrollMode="never"
             android:scrollbars="vertical" />
     </LinearLayout>
@@ -45,12 +57,12 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom">
 
-        <com.github.mmin18.widget.RealtimeBlurView
+        <io.github.limuyang2.realtimeblur.RealtimeBlurView
             android:id="@+id/topBlurView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            app:realtimeBlurRadius="25dp" />
+            app:realtimeBlurRadius="25" />
 
         <Button
             android:id="@+id/previewBtn"

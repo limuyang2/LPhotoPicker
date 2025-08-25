@@ -29,22 +29,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val permissionLaunch = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
-        var isAllOk = true
+    private val permissionLaunch =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+            var isAllOk = true
 
-        for ((k,v) in map) {
-            if (!v) {
-                isAllOk = false
-                println("------------->>> no per: ${k}")
+            for ((k, v) in map) {
+                if (!v) {
+                    isAllOk = false
+                    println("------------->>> no per: ${k}")
+                }
+            }
+
+            if (isAllOk) {
+                getPhoto()
+            } else {
+                Toast.makeText(this, "图片选择需要以下权限:1.访问设备上的照片", Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
-        if (isAllOk) {
-            getPhoto()
-        } else {
-            Toast.makeText(this, "图片选择需要以下权限:1.访问设备上的照片", Toast.LENGTH_LONG).show()
+    private val cropLaunch =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.let { intent ->
+                    val resultUri = UCrop.getOutput(intent) ?: return@let
+                    Glide.with(this).load(resultUri).into(viewBinding.imgView)
+                }
+            }
         }
-    }
 
     private lateinit var viewBinding: ActivityMainBinding
 
@@ -67,7 +79,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewBinding.columnsNumberSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        viewBinding.columnsNumberSeekBar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 viewBinding.columnsNumberMumTv.text = (progress + 3).toString()
             }
@@ -85,7 +98,8 @@ class MainActivity : AppCompatActivity() {
             viewBinding.multiNumSeekBar.isEnabled = !isChecked
         }
 
-        viewBinding.multiNumSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        viewBinding.multiNumSeekBar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 viewBinding.multiMumTv.text = (progress + 1).toString()
             }
@@ -106,28 +120,34 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getPhoto(theme: Int = R.style.LPhotoTheme) {
+    private fun getPhoto(theme: Int = top.limuyang2.photolibrary.R.style.LPhotoTheme) {
         // android 10 必须添加 ACCESS_MEDIA_LOCATION 权限，否则无法加载 HEIF 格式图片
         val perArr = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.ACCESS_MEDIA_LOCATION)
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.ACCESS_MEDIA_LOCATION
+            )
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION)
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_MEDIA_LOCATION
+            )
         } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, )
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         //验证权限
         if (hasPermissions(this, *perArr)) {
 
             LPhotoHelper.Builder()
-                    .maxChooseCount(viewBinding.multiMumTv.text.toString().toInt())
-                    .columnsNumber(viewBinding.columnsNumberMumTv.text.toString().toInt())
-                    .imageType(LPPImageType.ofAll())
-                    .pauseOnScroll(viewBinding.pauseOnScrollCb.isChecked)
-                    .isSingleChoose(viewBinding.singleChooseCb.isChecked)
-                    .isOpenLastAlbum(true)
-                    .theme(theme)
-                    .build()
-                    .start(this, CHOOSE_PHOTO_REQUEST)
+                .maxChooseCount(viewBinding.multiMumTv.text.toString().toInt())
+                .columnsNumber(viewBinding.columnsNumberMumTv.text.toString().toInt())
+                .imageType(LPPImageType.ofAll())
+                .pauseOnScroll(viewBinding.pauseOnScrollCb.isChecked)
+                .isSingleChoose(viewBinding.singleChooseCb.isChecked)
+                .isOpenLastAlbum(true)
+                .theme(theme)
+                .build()
+                .start(this, CHOOSE_PHOTO_REQUEST)
 
         } else {
             permissionLaunch.launch(perArr)
@@ -144,11 +164,12 @@ class MainActivity : AppCompatActivity() {
                     if (viewBinding.singleChooseCb.isChecked) { //单选模式
                         if (viewBinding.useUCropCb.isChecked) {
                             //使用UCrop裁剪图片
-                            val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
+                            val outUri =
+                                Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
                             UCrop.of(selectedPhotos[0], outUri)
-                                    .withAspectRatio(1f, 1f)
-                                    .withMaxResultSize(800, 800)
-                                    .start(this)
+                                .withAspectRatio(1f, 1f)
+                                .withMaxResultSize(800, 800)
+                                .start(this, cropLaunch)
                         } else {
                             Glide.with(this).load(selectedPhotos[0]).into(viewBinding.imgView)
                         }

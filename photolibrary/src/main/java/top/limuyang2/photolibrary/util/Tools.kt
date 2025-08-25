@@ -35,19 +35,3 @@ internal fun Activity.getScreenWidth(): Int {
 }
 
 
-/**
- * Return the height of screen, in pixel.
- *
- * @return the height of screen, in pixel
- */
-internal fun getScreenHeight(context: Context): Int {
-    val wm = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
-            ?: return context.resources.displayMetrics.heightPixels
-    val point = Point()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        wm.defaultDisplay.getRealSize(point)
-    } else {
-        wm.defaultDisplay.getSize(point)
-    }
-    return point.y
-}

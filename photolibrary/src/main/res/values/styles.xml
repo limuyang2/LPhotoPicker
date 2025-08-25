@@ -22,7 +22,7 @@
     <style name="LPhotoTheme" parent="LPPBaseTheme">
 
         <!--通用属性（图片选择、图片预览共用）-->
-        <item name="l_pp_toolBar_height">56dp</item>
+        <item name="l_pp_toolBar_height">@dimen/l_pp_toolBar_height</item>
         <item name="l_pp_toolBar_backIcon">@drawable/ic_l_pp_back_android</item>
         <item name="l_pp_toolBar_title_size">16sp</item>
         <item name="l_pp_bottomBar_height">50dp</item>

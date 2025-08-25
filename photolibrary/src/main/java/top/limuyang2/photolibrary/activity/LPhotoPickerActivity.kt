@@ -7,13 +7,16 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +34,13 @@ import top.limuyang2.photolibrary.R
 import top.limuyang2.photolibrary.adapter.LPPGridDivider
 import top.limuyang2.photolibrary.adapter.PhotoPickerRecyclerAdapter
 import top.limuyang2.photolibrary.databinding.LPpActivityPhotoPickerBinding
-import top.limuyang2.photolibrary.util.*
+import top.limuyang2.photolibrary.util.ImageEngineUtils
+import top.limuyang2.photolibrary.util.click
+import top.limuyang2.photolibrary.util.dip
+import top.limuyang2.photolibrary.util.findPhoto
+import top.limuyang2.photolibrary.util.getScreenWidth
+import top.limuyang2.photolibrary.util.navigationBarColor
+import top.limuyang2.photolibrary.util.statusBarLightMode
 
 
 /**
@@ -81,6 +90,18 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.root) {v,insets ->
+            val bar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            viewBinding.fakeBar.updateLayoutParams {
+                height = bar.top
+            }
+
+            viewBinding.pickerRecycler.updatePadding(bottom = bar.bottom)
+
+            insets
+        }
+
         initAttr()
 
         viewBinding.photoPickerTitle.text = intent.getStringExtra("bucketName")
@@ -101,7 +122,8 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         window.setBackgroundDrawable(ColorDrawable(activityBg))
 
         val statusBarColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_status_bar_color, ContextCompat.getColor(this, R.color.colorPrimaryDark))
-        setStatusBarColor(statusBarColor)
+        viewBinding.fakeBar.setBackgroundColor(statusBarColor)
+
         window.statusBarLightMode = typedArray.getBoolean(R.styleable.LPPAttr_l_pp_status_bar_lightMode, false)
 
         val toolBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_toolBar_height, dip(56).toInt())
@@ -116,16 +138,14 @@ class LPhotoPickerActivity : LBaseActivity<LPpActivityPhotoPickerBinding>() {
         val toolBarBackgroundColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_toolBar_background, ContextCompat.getColor(this, R.color.colorPrimary))
 
         if (toolBarBackgroundRes != 0) {
-            viewBinding.toolBar.setBackgroundResource(toolBarBackgroundRes)
+            viewBinding.barLl.setBackgroundResource(toolBarBackgroundRes)
         } else {
-            viewBinding.toolBar.setBackgroundColor(toolBarBackgroundColor)
+            viewBinding.barLl.setBackgroundColor(toolBarBackgroundColor)
         }
 
         val bottomBarBgColor = typedArray.getColor(R.styleable.LPPAttr_l_pp_picker_bottomBar_background, ContextCompat.getColor(this, R.color.l_pp_bottomBar_bg))
         viewBinding.topBlurView.setOverlayColor(bottomBarBgColor)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            navigationBarColor = bottomBarBgColor
-        }
+        navigationBarColor = bottomBarBgColor
 
         val bottomBarHeight = typedArray.getDimensionPixelSize(R.styleable.LPPAttr_l_pp_bottomBar_height, dip(50).toInt())
         val newBl = viewBinding.bottomLayout.layoutParams

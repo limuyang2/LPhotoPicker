@@ -3,6 +3,7 @@ package top.limuyang2.photolibrary.activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import top.limuyang2.photolibrary.LPhotoHelper.Companion.EXTRA_THEME
@@ -28,6 +29,7 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
     abstract fun initData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         setTheme(intentTheme)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -71,15 +73,15 @@ abstract class LBaseActivity<V : ViewBinding> : AppCompatActivity() {
         initData()
     }
 
-    override fun startActivityForResult(intent: Intent?, requestCode: Int) {
+    override fun startActivityForResult(intent: Intent, requestCode: Int) {
         // 传递主题
-        intent?.putExtra(EXTRA_THEME, intentTheme)
+        intent.putExtra(EXTRA_THEME, intentTheme)
         super.startActivityForResult(intent, requestCode)
     }
 
-    override fun startActivityForResult(intent: Intent?, requestCode: Int, options: Bundle?) {
+    override fun startActivityForResult(intent: Intent, requestCode: Int, options: Bundle?) {
         // 传递主题
-        intent?.putExtra(EXTRA_THEME, intentTheme)
+        intent.putExtra(EXTRA_THEME, intentTheme)
         super.startActivityForResult(intent, requestCode, options)
     }
 }

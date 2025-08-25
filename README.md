@@ -27,42 +27,18 @@
 ![](https://github.com/limuyang2/LPhotoPicker/blob/master/pic/apk.png)
 
 ## 获取 
-先在 build.gradle 的 repositories 添加仓库：  
-```gradle
-allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
-}
-```
-
-再在dependencies添加：  
-> 最新版本 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
+添加依赖：  
+> [最新版本](https://central.sonatype.com/artifact/io.github.limuyang2/LPhotoPicker)
 ```gradle
 dependencies {
     // only support AndroidX
-	implementation 'com.github.limuyang2:LPhotoPicker:2.7'
-}
-```
-
-在build.gradle中添加以下配置：  
-```gradle
-android {
-    compileSdkVersion 33
-    defaultConfig {
-        ………………
-
-        //添加以下两句代码
-        renderscriptTargetApi 33  //版本号请与compileSdkVersion保持一致
-        renderscriptSupportModeEnabled true
-
-    }
+	implementation("io.github.limuyang2:LPhotoPicker:3.0")
+	implementation("io.github.limuyang2:renderscrip-toolkit:1.0.1")
 }
 ```
 
 ## 使用
-> 使用前，记得获取权限！‘Manifest.permission.READ_EXTERNAL_STORAGE‘’，因为大家各自项目中使用的权限框架各不相同，库中再集成的话会显得非常臃肿多余。  
+> 使用前，记得获取权限！`Manifest.permission.READ_EXTERNAL_STORAGE`，因为大家各自项目中使用的权限框架各不相同，库中再集成的话会显得非常臃肿多余。  
 
 > 以下均以kotlin为示例，java的写法基本无差别，不在单独列出  
 
@@ -82,13 +58,14 @@ LPhotoHelper.Builder()
 在activity```onActivityResult```中接收数据
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                CHOOSE_PHOTO_REQUEST -> {
-                    val selectedPhotos = LPhotoPickerActivity.getSelectedPhotos(data)
-                }
+    super.onActivityResult(requestCode, resultCode, data)
+    if (resultCode == RESULT_OK) {
+        when (requestCode) {
+            CHOOSE_PHOTO_REQUEST -> {
+                val selectedPhotos = LPhotoPickerActivity.getSelectedPhotos(data)
+            }
         }
+    }
 }
 ```
 
@@ -183,30 +160,31 @@ LPhotoHelper.Builder()
 然后在```onActivityResult```中接收数据后，传递给uCrop即可
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                CHOOSE_PHOTO_REQUEST -> {
-                    val selectedPhotos = LPhotoPickerActivity.getSelectedPhotos(data)
-                    if(selectedPhotos.size == 1) {
-                        //使用UCrop裁剪图片
-                        val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
-                        UCrop.of(Uri.fromFile(File(selectedPhotos[0])), outUri)
-                            .withAspectRatio(1f, 1f)
-                            .withMaxResultSize(800, 800)
-                            .start(this)
-                    }
+    super.onActivityResult(requestCode, resultCode, data)
+    if (resultCode == RESULT_OK) {
+        when (requestCode) {
+            CHOOSE_PHOTO_REQUEST -> {
+                val selectedPhotos = LPhotoPickerActivity.getSelectedPhotos(data)
+                if (selectedPhotos.size == 1) {
+                    //使用UCrop裁剪图片
+                    val outUri = Uri.fromFile(File(cacheDir, "${System.currentTimeMillis()}.jpg"))
+                    UCrop.of(Uri.fromFile(File(selectedPhotos[0])), outUri)
+                        .withAspectRatio(1f, 1f)
+                        .withMaxResultSize(800, 800)
+                        .start(this)
                 }
-                
-                //接收uCrop的参数
-                UCrop.REQUEST_CROP   -> {
-                    data?.let {
-                        val resultUri = UCrop.getOutput(data)
-                        Log.d("UCrop.REQUEST_CROP", resultUri.toString())
-                        Glide.with(this).load(resultUri).into(imgView)
-                    }
+            }
+
+            //接收uCrop的参数
+            UCrop.REQUEST_CROP -> {
+                data?.let {
+                    val resultUri = UCrop.getOutput(data)
+                    Log.d("UCrop.REQUEST_CROP", resultUri.toString())
+                    Glide.with(this).load(resultUri).into(imgView)
                 }
+            }
         }
+    }
 }
 ```
 使用步骤很简单，具体的使用都可以参照demo [MainActivity](https://github.com/limuyang2/LPhotoPicker/blob/master/app/src/main/java/top/limuyang2/pohotopicker/MainActivity.kt)

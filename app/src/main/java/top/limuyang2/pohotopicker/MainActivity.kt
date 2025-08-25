@@ -9,11 +9,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
 import top.limuyang2.photolibrary.LPhotoHelper
@@ -62,8 +67,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.root) {v,insets ->
+            val bar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            viewBinding.fakeBar.updateLayoutParams { height = bar.top }
+
+            insets
+        }
+
 
         viewBinding.toolBar.title = getString(R.string.app_name)
 

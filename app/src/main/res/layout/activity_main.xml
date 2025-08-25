@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/fake_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
@@ -170,9 +176,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:textAllCaps="false"
                 android:layout_marginBottom="8dp"
-                android:text="Go photo (Theme 3)" />
+                android:text="Go photo (Theme 3)"
+                android:textAllCaps="false" />
 
         </LinearLayout>
     </ScrollView>

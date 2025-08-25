@@ -10,7 +10,8 @@ import androidx.viewpager.widget.ViewPager
  * Date 2018/8/2
  * @author limuyang
  */
-class LPPViewPage constructor(context: Context, attrs: AttributeSet) : ViewPager(context, attrs) {
+class LPPViewPage @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    ViewPager(context, attrs) {
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         return try {

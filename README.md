@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/limuyang2/LPhotoPicker.svg)](https://jitpack.io/#limuyang2/LPhotoPicker)
 # LPhotoPicker
 这是一个漂亮的、纯粹的`AndroidX`图片选择框架，已适配：
-- `Android 10`的沙盒机制、Android 12\13
+- `Android 10`的沙盒机制、Android 12\13隐私权限
 - 支持`Dark Mode`，
 - `Android 10`的`HEIF`图片格式支持
 

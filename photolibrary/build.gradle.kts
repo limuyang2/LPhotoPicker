@@ -65,7 +65,7 @@ dependencies {
 
 //---------- maven upload info -----------------------------------
 
-val versionName = "3.0"
+val versionName = "3.1"
 
 var signingKeyId = ""//签名的密钥后8位
 var signingPassword = ""//签名设置的密码

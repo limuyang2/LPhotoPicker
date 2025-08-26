@@ -32,10 +32,10 @@
 ```gradle
 dependencies {
     // only support AndroidX
-	implementation("io.github.limuyang2:LPhotoPicker:3.0")
+	implementation("io.github.limuyang2:LPhotoPicker:3.2")
 	
 	// 导入RenderScript-toolkit。 也可以使用任何你编译的RenderScript-toolkit的库
-	implementation("io.github.limuyang2:renderscrip-toolkit:1.0.1")
+	implementation("io.github.limuyang2:renderscrip-toolkit:1.0.2")
 }
 ```
 
